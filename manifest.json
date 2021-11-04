@@ -3,7 +3,7 @@
   "description": "A client-side password manager",
   "author": "Mason Zhang & Amanda Lee",
   "version": "1.0",
-  "manifest_version": 1,
+  "manifest_version": 3,
   "background": {
     "service_worker": "background.js"
   },
