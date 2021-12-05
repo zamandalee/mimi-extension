@@ -1,4 +1,14 @@
 body {
   height: 350px;
-  width: 250px;
+  width: 275px;
+  box-sizing: border-box;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+}
+.popup-title {
+  font-size: 20px;
+}
+li {
+  padding: 5px 0;
 }
