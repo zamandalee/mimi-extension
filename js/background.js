@@ -9,17 +9,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 
-// Detect keyboard shortcut to trigger masterpass hashing
-chrome.commands.onCommand.addListener((command) => {
-	console.log(`Command detected: ${command}`);
-
-	window.addEventListener('DOMContentLoaded', yourFunction, false);
-	// Text inside active input element
-	const masterPass = document.querySelector(":focus").value;
-	console.log(`masterPass scraped: ${masterPass}`);
-});
-
-
 
 // Firebase configuration
 const firebaseConfig = {
@@ -53,12 +42,21 @@ async function test() {
 }
 test();
 
+// Keyboard shortcuts listener
+chrome.commands.onCommand.addListener((command) => {
+	console.log(`Command detected: ${command}`);
 
-// Hot reload hack
-chrome.commands.onCommand.addListener(function (command) {
-	console.log(command)
-    if (command === "reload") {
+	// Master password hashing
+	if (command === "hash_masterpass") {
+		chrome.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+			chrome.scripting.executeScript({
+				target: { tabId: tab.id },
+				files: ['js/hashing-script.js']
+			})
+		})
+	}
+	// Hot reload hack
+	else if (command === "reload") {
 		chrome.runtime.reload();
-    } else if (command === "random") {
-    }
+	}
 });
