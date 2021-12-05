@@ -5,7 +5,7 @@
   "version": "1.0.1",
   "manifest_version": 3,
   "background": {
-    "service_worker": "js/background.js", 
+    "service_worker": "js/background.js",
     "type": "module"
   },
   "content_scripts": [
@@ -35,9 +35,13 @@
   },
   "commands": {
     "reload" : {
+        "hash_masterpass": {
+          "suggested_key": "Ctrl+Shift+p",
+          "description": "Trigger hashing to produce the user's password"
+        }
         "suggested_key": {
              "default": "Ctrl+Shift+R",
-             "mac": "Command+Shift+Y" 
+             "mac": "Command+Shift+Y"
         },
         "description": "Save a link"
     },
