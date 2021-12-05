@@ -1,10 +1,3 @@
-chrome.runtime.onInstalled.addListener(() => {
-	let color = "blue";
-	chrome.storage.sync.set({color});
-	console.log("Default background color set to %cgreen", `color: ${color}`);
-});
-// all event listener registrations must be at top level
-
 // Check for the first install (to generate unique client-auth code)
 chrome.runtime.onInstalled.addListener(function (details) {
 	if (details.reason == "install") {
@@ -15,8 +8,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
 	}
 });
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
+// Firebase configuration
 const firebaseConfig = {
 	apiKey: "AIzaSyBrdxO2cgm9IHJw8bRIn-8SfK_jIK4KRSY",
 	authDomain: "mimi-2b281.firebaseapp.com",
@@ -26,8 +20,6 @@ const firebaseConfig = {
 	appId: "1:772480921178:web:ef3f46e1446c6e5424b263",
 	measurementId: "G-98705SB5MM",
 };
-// import * as functions from "./functions"
-// functions.generateMimi("as", "bs", 0)
 
 // Initialize Cloud Firestore through Firebase
 import {initializeApp} from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
@@ -50,10 +42,21 @@ async function test() {
 }
 test();
 
-chrome.commands.onCommand.addListener(function (command) {
-	console.log(command)
-    if (command === "reload") {
+// Keyboard shortcuts listener
+chrome.commands.onCommand.addListener((command) => {
+	console.log(`Command detected: ${command}`);
+
+	// Master password hashing
+	if (command === "hash_masterpass") {
+		chrome.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+			chrome.scripting.executeScript({
+				target: { tabId: tab.id },
+				files: ['js/hashing-script.js']
+			})
+		})
+	}
+	// Hot reload hack
+	else if (command === "reload") {
 		chrome.runtime.reload();
-    } else if (command === "random") {
-    }
+	}
 });

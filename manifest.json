@@ -5,14 +5,14 @@
   "version": "1.0.1",
   "manifest_version": 3,
   "background": {
-    "service_worker": "js/background.js", 
+    "service_worker": "js/background.js",
     "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["https://*/*"],
       "css": [],
-      "js": ["js/content-script.js"]
+      "js": ["js/functions.js"]
     }
   ],
   "permissions": [
@@ -34,10 +34,17 @@
     "128": "images/logo128.png"
   },
   "commands": {
+    "hash_masterpass": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+8",
+        "mac": "Command+Shift+8"
+      },
+      "description": "Trigger hashing to produce the user's password"
+    },
     "reload" : {
         "suggested_key": {
              "default": "Ctrl+Shift+R",
-             "mac": "Command+Shift+Y" 
+             "mac": "Command+Shift+Y"
         },
         "description": "Save a link"
     },
