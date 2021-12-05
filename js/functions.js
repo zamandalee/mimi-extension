@@ -2,7 +2,7 @@
 function generateMimi(seed, domain, counter) {
     const concatSeed = seed + domain + counter
     let h = sodium.crypto_generichash(16, concatSeed);
-    console.log(sodium.to_hex(h), h.length);
+    console.log(h, sodium.to_hex(h), h.length);
 }
 
 
@@ -15,4 +15,4 @@ window.sodium = {
 };
 
 
-
+export {generateMimi, loadMimi}
