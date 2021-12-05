@@ -1,0 +1,55 @@
+{
+	"name": "Mimi",
+	"description": "A client-side password manager",
+	"author": "Mason Zhang & Amanda Lee",
+	"version": "1.0.1",
+	"manifest_version": 3,
+	"background": {
+		"service_worker": "background.js"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://*/*"],
+			"css": [],
+			"js": ["content-script.js"]
+		}
+	],
+	"permissions": ["storage", "activeTab", "scripting", "management"],
+	"action": {
+		"default_popup": "index.html",
+		"default_icon": {
+			"16": "logo16.png",
+			"32": "logo32.png",
+			"48": "logo48.png",
+			"128": "logo128.png"
+		}
+	},
+	"icons": {
+		"16": "logo16.png",
+		"32": "logo32.png",
+		"48": "logo48.png",
+		"128": "logo128.png"
+	},
+	"commands": {
+		"reload": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+R",
+				"mac": "Command+Shift+Y"
+			},
+			"description": "Save a link"
+		},
+		"random": {
+			"suggested_key": {
+				"default": "Alt+Shift+L"
+			},
+			"description": "Load a random link"
+		}
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["content-script.js"],
+			"matches": ["https://*/*"]
+		}
+	],
+	"content_security_policy": {"extension-pages": "script-src 'self' https://www.gstatic.com; object-src 'self'"}
+}
