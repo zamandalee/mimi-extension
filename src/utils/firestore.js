@@ -14,17 +14,27 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db = getFirestore()
 
-async function test(userID) {
+// Add user when they first use MiMi
+async function createUser(userId) {
 	try {
-    console.log(userID)
-		const docRef = await setDoc(doc(db, "users", userID), {
-			first: "Ada",
-			last: "Lovelace",
-			born: 1815,
-		});
-		console.log("Document written with ID: ", docRef);
+		const docRef = await setDoc(
+			doc(db, "users", userId), {}
+		)
+		console.log(`Creating document ${docRef} for user ${userId}`)
 	} catch (e) {
-		console.error("Error adding document: ", e);
+		console.error("Error creating document: ", e);
 	}
 }
-export {test}
+// Add domain and counter to user's document
+async function addDomain(userId, domain, counter) {
+	try {
+		const docRef = await setDoc(
+			doc(db, "users", userId), {domain: counter}
+		)
+		console.log(`Added domain ${domain} and counter ${counter} for user ${userId}`)
+	} catch (e) {
+		console.error("Error adding domain: ", e)
+	}
+}
+
+export { createUser, addDomain }
