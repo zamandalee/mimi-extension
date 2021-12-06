@@ -2,9 +2,11 @@
 
 //To upgrade to MV3, comment out line 143 of webpack.config.js
 import * as functions from "./utils/functions";
-
+import * as db1 from "./utils/firestore"
 // Check for the first install (to generate unique client-auth code)
 chrome.runtime.onInstalled.addListener(function (details) {
+	db1.test("masonzhang")
+	functions.generateMimi("abc", "a.com", 100)
 	if (details.reason == "install") {
 		//First install! Generate & store clientAuth token
 	} else if (details.reason == "update") {

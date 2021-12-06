@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "599f48f28d9bcab6fff9";
+/******/ 	var hotCurrentHash = "c3972a4b4aca293d1c34";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -872,7 +872,7 @@ exports.push([module.i, "/*!\n * Bootstrap v4.5.1 (https://getbootstrap.com/)\n 
 
 exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "html, body, #root {\n  margin: 0;\n  padding: 0;\n  font-family: 'Lato', sans-serif;\n\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  width: 500px;\n  height: 500px;\n}\np {\n  margin: 0 !important;\n}\n\n.wh100 {\n  width: 100%;\n  height: 100%;\n}\n\ninput::-webkit-outer-spin-button,\ninput::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n/* Firefox */\ninput[type=number] {\n  -moz-appearance: textfield;\n}\n\n/*Tweaking Bootstrap button colors*/\n.btn-info.active, .btn-info:active {\n  background-color: #2f4858 !important\n}\n.btn-info {\n  background-color: #33658a !important\n}\n.btn-outline-info {\n  color: #33658a !important;\n  border-color: #33658a !important;\n\n}\n.btn-outline-info.active, .btn-outline-info:hover  {\n  color: #ffffff !important;\n  background-color: #33658a !important;\n}\n.nav-link.active {\n  background-color: #ffffff !important;\n  color: #2f4858 !important\n}\n.btn-danger {\n  background-color: #eb0000 !important;\n}\n\n.nav-link {\n  color: #f6ae2d !important\n}\n/*Necessary to customize popover width*/\n.popover {\n  max-width: none !important;\n}", ""]);
+exports.push([module.i, "html, body, #root {\n  margin: 0;\n  padding: 0;\n  font-family: 'Lato', sans-serif;\n\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  width: 500px;\n  height: 500px;\n}\np {\n  margin: 0 !important;\n}\n\n.wh100 {\n  width: 100%;\n  height: 100%;\n}\n\ninput::-webkit-outer-spin-button,\ninput::-webkit-inner-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}\n/* Firefox */\ninput[type=number] {\n  -moz-appearance: textfield;\n}\n\n/*Tweaking Bootstrap button colors*/\n.btn-info.active, .btn-info:active {\n  background-color: #2f4858 !important\n}\n.btn-info {\n  background-color: #33658a !important\n}\n.btn-outline-info {\n  color: #33658a !important;\n  border-color: #33658a !important;\n\n}\n.btn-outline-info.active, .btn-outline-info:hover  {\n  color: #ffffff !important;\n  background-color: #33658a !important;\n}\n.nav-link.active {\n  background-color: #ffffff !important;\n  color: #2f4858 !important\n}\n.btn-danger {\n  background-color: #eb0000 !important;\n}\n\n.nav-link {\n  color: #f6ae2d !important\n}\n/*Necessary to customize popover width*/\n.popover {\n  max-width: none !important;\n}\n\nbody {\n  height: 350px;\n  width: 275px;\n  box-sizing: border-box;\n  padding: 20px;\n  font-family: 'Roboto', sans-serif;\n  font-size: 15px;\n}\n.popup-title {\n  font-size: 18px;\n}\nli {\n  padding: 5px 0;\n}", ""]);
 
 
 
@@ -29819,20 +29819,186 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_App_css__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap.min.css */ "./node_modules/bootstrap/dist/css/bootstrap.min.css");
 /* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_2__);
-var _jsxFileName = "/Users/masonzhang/cs/mimi-extension/react-webpack/src/App.js";
+var _jsxFileName = "/Users/masonzhang/cs/mimi-extension/src/App.js";
 
 
 
+let IN_PROGRESS = 'IN_PROGRESS';
+let CHANGED = 'CHANGED';
 
-function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    __self: this,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 5,
-      columnNumber: 9
+class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mimiDomains: [],
+      changedPwDomains: {}
+    };
+    this.gifClickHandler = this.gifClickHandler.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      mimiDomains: this.props.domains
+    });
+  }
+
+  changePassword(domain) {
+    // Mark target domain as in progress
+    this.setState({
+      changedPwDomains: Object.assign({
+        domain: IN_PROGRESS
+      }, this.state.changedPwDomains)
+    }); // Write a new counter to db1, db2, db3
+
+    const newChangedDomains = Object.assign({
+      domain: CHANGED
+    }, this.state.changedPwDomains);
+    this.props.changePassword(domain).then(() => {
+      // Market target domain as changed
+      this.setState({
+        changedPwDomains: newChangedDomains
+      });
+    });
+  }
+
+  render() {
+    // Domain list
+    const _this$state = this.state,
+          mimiDomains = _this$state.mimiDomains,
+          changedPwDomains = _this$state.changedPwDomains;
+    let domains = mimiDomains.map(domain => {
+      // Button to change password for this domain
+      let pwMessage = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "change-pw",
+        onClick: this.changePassword.bind(this, domain),
+        __self: this,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 39,
+          columnNumber: 20
+        }
+      }, "Change Password");
+
+      if (domain in changedPwDomains) {
+        if (changedPwDomains[domain] === IN_PROGRESS) {
+          // Message shown after Change Password button is clicked
+          pwMessage = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "pw-changing",
+            __self: this,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 43,
+              columnNumber: 18
+            }
+          }, "Changing password...");
+        } else {
+          // Message shown after pw successfully changed
+          pwMessage = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "pw-changed",
+            __self: this,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 46,
+              columnNumber: 18
+            }
+          }, "Password changed.");
+        }
+      }
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        key: domain,
+        className: "domain-item",
+        __self: this,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 51,
+          columnNumber: 5
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "domain-name",
+        __self: this,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 52,
+          columnNumber: 6
+        }
+      }, domain), pwMessage);
+    }); // If no domains
+
+    if (mimiDomains.length === 0) {
+      domains = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "no-domains",
+        __self: this,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 60,
+          columnNumber: 14
+        }
+      }, "No passwords saved with MiMi yet.");
     }
-  }, "Hello My name is poopasdffes");
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "popup",
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 64,
+        columnNumber: 4
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "domains-index",
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 65,
+        columnNumber: 5
+      }
+    }, domains), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 68,
+        columnNumber: 5
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      class: "popup-title",
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 69,
+        columnNumber: 6
+      }
+    }, "How to Use MiMi:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ol", {
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 70,
+        columnNumber: 6
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 71,
+        columnNumber: 7
+      }
+    }, "Click into a password input field"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 72,
+        columnNumber: 7
+      }
+    }, "Fill in your MiMi master password"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 73,
+        columnNumber: 7
+      }
+    }, "Hit command+shift+p to transform your master password"))));
+  }
+
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
@@ -29853,7 +30019,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App */ "./src/App.js");
-var _jsxFileName = "/Users/masonzhang/cs/mimi-extension/react-webpack/src/index.js";
+var _jsxFileName = "/Users/masonzhang/cs/mimi-extension/src/index.js";
 
 
 
@@ -29875,7 +30041,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/masonzhang/cs/mimi-extension/react-webpack/src/index.js */"./src/index.js");
+module.exports = __webpack_require__(/*! /Users/masonzhang/cs/mimi-extension/src/index.js */"./src/index.js");
 
 
 /***/ })

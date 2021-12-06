@@ -2,8 +2,8 @@ import React from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-IN_PROGRESS = 'IN_PROGRESS'
-CHANGED = 'CHANGED'
+let IN_PROGRESS = 'IN_PROGRESS'
+let CHANGED = 'CHANGED'
 
 class App extends React.Component {
 	constructor(props) {
