@@ -14,10 +14,23 @@ const Functions = (function() {
         console.log(h, sodium.to_hex(h), h.length);
         return h
     }
+    const generateRandomInt = function(max) {
+        Math.floor(Math.random() * max);
+    }
+    const secretShareCounter = function(domain) { // TODO
+        const MAX = 10000
+        const shares = generateRandomInt(MAX)
+        db1[domain] = shares[0]
+        db2[domain] = shares[1]
+        db3[domain] = shares[2]
+        return sum(shares)
+    }
     return {
-        generateMimi
+        generateMimi, secretShareCounter
     }
 })()
+
+
 
 
 // export {generateMimi, loadMimi}
