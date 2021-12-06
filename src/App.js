@@ -35,10 +35,10 @@ class App extends React.Component {
 		// Domain list
 		const { mimiDomains } = this.state
 
-		let domains = mimiDomains.map((domain, status) => {
+		let domains = Object.keys(mimiDomains).map(domain => {
 			// Button to change password for this domain
 			let pwMessage = <div className="change-pw" onClick={this.changePassword.bind(this, domain)}>Change Password</div>
-			if (status === IN_PROGRESS) {
+			if (mimiDomains[domain] === IN_PROGRESS) {
 				// After Change Password button is clicked
 				pwMessage = <div className="pw-changing">Changing...</div>
 			} else {
@@ -64,7 +64,7 @@ class App extends React.Component {
 					{domains}
 				</div>
 				<div>
-					<div class="popup-title">How to Use MiMi:</div>
+					<div className="popup-title">How to Use MiMi:</div>
 					<ol>
 						<li>Click into a password input field</li>
 						<li>Fill in your MiMi master password</li>

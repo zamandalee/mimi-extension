@@ -1,4 +1,4 @@
-import { getFirestore, collection, doc, setDoc } from "firebase/firestore" 
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore"
 import { initializeApp } from "@firebase/app";
 // Firebase configuration
 const firebaseConfig = {
@@ -10,18 +10,19 @@ const firebaseConfig = {
 	appId: "1:772480921178:web:ef3f46e1446c6e5424b263",
 	measurementId: "G-98705SB5MM",
 };
-const firebaseApp = initializeApp(firebaseConfig);
+// const firebaseApp = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const db = getFirestore()
 
 async function test(userID) {
 	try {
-        console.log(userID)
+    console.log(userID)
 		const docRef = await setDoc(doc(db, "users", userID), {
 			first: "Ada",
 			last: "Lovelace",
 			born: 1815,
 		});
-		console.log("Document written with ID: ", userID);
+		console.log("Document written with ID: ", docRef);
 	} catch (e) {
 		console.error("Error adding document: ", e);
 	}
