@@ -1,5 +1,9 @@
 // Content script, programmatically injected with keyboard shortcut
 
+/*global chrome*/
+import * as functions from "./Utils/functions";
+import * as storage from "./Utils/storage";
+
 // import generateMimi from "./functions.js";
 // functions = require('./functions.js')
 
