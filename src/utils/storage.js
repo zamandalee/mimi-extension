@@ -1,12 +1,14 @@
 /*global chrome*/
 
+let isLocal = false
 /**
  * Retrieves the value of a key
  * @param {String} key
  */
 export function getData(key) {
+
   return new Promise((resolve) => {
-    chrome.storage.sync.get(key, (result) => {
+    chrome.storage[isLocal ? "local" : "sync"].get(key, (result) => {
       result[key] ? resolve(result[key]) : resolve(undefined);
     });
   });
@@ -19,7 +21,7 @@ export function getData(key) {
  */
 export function save(key, value) {
   return new Promise((resolve) => {
-    chrome.storage.sync.set({ [key]: value }, () => {
+    chrome.storage[[isLocal ? "local" : "sync"]].set({ [key]: value }, () => {
       resolve();
     });
   });

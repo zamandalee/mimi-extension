@@ -1,11 +1,15 @@
 {
   "files": {
-    "app.js": "/static/js/bundle.js",
-    "app.js.map": "/static/js/bundle.js.map",
+    "app.css": "/static/css/app.css",
+    "app.js": "/static/js/app.js",
+    "app.js.map": "/static/js/app.js.map",
     "background.js": "/background.js",
     "background.js.map": "/background.js.map",
     "content-script.js": "/content-script.js",
     "content-script.js.map": "/content-script.js.map",
-    "index.html": "/index.html"
+    "index.html": "/index.html",
+    "precache-manifest.c659669c73840a0780d9d91f2ec26732.js": "/precache-manifest.c659669c73840a0780d9d91f2ec26732.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/app.css.map": "/static/css/app.css.map"
   }
 }

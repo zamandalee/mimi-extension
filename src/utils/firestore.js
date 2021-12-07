@@ -37,4 +37,5 @@ async function addDomain(userId, domain, counter) {
 	}
 }
 
+
 export { createUser, addDomain }

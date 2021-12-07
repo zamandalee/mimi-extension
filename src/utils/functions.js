@@ -8,7 +8,8 @@ const sodium = require('libsodium-wrappers');
 // Hash the masterpass, domain name, and counter together to product the MiMi password
 export const generateMimi = async function (seed, domain, counter) {
     await sodium.ready
-    const concatSeed = seed + domain + counter
+    const clientAuthToken = await storage.getData("client_auth")
+    const concatSeed = seed + domain + counter + clientAuthToken
     let h = sodium.crypto_generichash(16, concatSeed);
     console.log(h, sodium.to_hex(h), h.length);
     return h
@@ -40,9 +41,13 @@ export const generateDbSecrets = function (domain) { // TODO
     return sum(shares)
 }
 
+export function createAndStoreClientAuthToken() {
+    const token = sodium.crypto_generichash(32);
+    storage.save("client_auth", token)
+}
+
 // Private helpers
 const passwordToInt = function (pw) {
-
 }
 
 const generateRandomInts = function (max) {
