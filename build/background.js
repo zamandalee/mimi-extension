@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "c3972a4b4aca293d1c34";
+/******/ 	var hotCurrentHash = "37e1eb20bb97d3723d97";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -102543,58 +102543,46 @@ module.exports = function (module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_functions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/functions */ "./src/utils/functions.js");
-/* harmony import */ var _utils_firestore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/firestore */ "./src/utils/firestore.js");
+/* harmony import */ var _Users_masonzhang_cs_mimi_extension_node_modules_babel_preset_react_app_node_modules_babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/babel-preset-react-app/node_modules/@babel/runtime/helpers/esm/slicedToArray */ "./node_modules/babel-preset-react-app/node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _utils_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/functions */ "./src/utils/functions.js");
+/* harmony import */ var _utils_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/storage */ "./src/utils/storage.js");
+
+
 /*global chrome*/
 //To upgrade to MV3, comment out line 143 of webpack.config.js
 
  // Check for the first install (to generate unique client-auth code)
 
 chrome.runtime.onInstalled.addListener(function (details) {
-  _utils_firestore__WEBPACK_IMPORTED_MODULE_1__["test"]("masonzhang");
-  _utils_functions__WEBPACK_IMPORTED_MODULE_0__["generateMimi"]("abc", "a.com", 100);
-
-  if (details.reason == "install") {//First install! Generate & store clientAuth token
-  } else if (details.reason == "update") {
-    var thisVersion = chrome.runtime.getManifest().version;
-    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+  if (details.reason === "install") {
+    //First install! Generate & store clientAuth token
+    if (Object(_utils_storage__WEBPACK_IMPORTED_MODULE_2__["getData"])("clientAuth") === undefined) {
+      _utils_functions__WEBPACK_IMPORTED_MODULE_1__["createAndStoreIdAndToken"]();
+    }
   }
 }); // Keyboard shortcuts listener
 
-chrome.commands.onCommand.addListener(command => {
+chrome.commands.onCommand.addListener(async command => {
   console.log("Command detected: ".concat(command)); // Master password hashing
 
   if (command === "hash_masterpass") {
-    chrome.tabs.query({
+    let queryOptions = {
       active: true,
       currentWindow: true
-    }).then(([tab]) => {
-      chrome.scripting.executeScript({
-        target: {
-          tabId: tab.id
-        },
-        files: ['js/hashing-script.js']
-      });
+    };
+
+    let _await$chrome$tabs$qu = await chrome.tabs.query(queryOptions),
+        _await$chrome$tabs$qu2 = Object(_Users_masonzhang_cs_mimi_extension_node_modules_babel_preset_react_app_node_modules_babel_runtime_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_await$chrome$tabs$qu, 1),
+        tab = _await$chrome$tabs$qu2[0];
+
+    chrome.scripting.executeScript({
+      target: {
+        tabId: tab.id
+      },
+      files: ["content-script.js"]
     });
-  } // Hot reload hack
-  else if (command === "reload") {
-      chrome.runtime.reload();
-    }
+  }
 });
-
-/***/ }),
-
-/***/ "./src/utils/constants.js":
-/*!********************************!*\
-  !*** ./src/utils/constants.js ***!
-  \********************************/
-/*! exports provided: blue */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blue", function() { return blue; });
-const blue = "#33658a";
 
 /***/ }),
 
@@ -102602,12 +102590,15 @@ const blue = "#33658a";
 /*!********************************!*\
   !*** ./src/utils/firestore.js ***!
   \********************************/
-/*! exports provided: test */
+/*! exports provided: createUser, deleteUser, addOrEditDomain, fetchCounter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "test", function() { return test; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteUser", function() { return deleteUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addOrEditDomain", function() { return addOrEditDomain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchCounter", function() { return fetchCounter; });
 /* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
@@ -102622,20 +102613,54 @@ const firebaseConfig = {
   appId: "1:772480921178:web:ef3f46e1446c6e5424b263",
   measurementId: "G-98705SB5MM"
 };
-const firebaseApp = Object(_firebase_app__WEBPACK_IMPORTED_MODULE_1__["initializeApp"])(firebaseConfig);
-const db = Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["getFirestore"])();
+Object(_firebase_app__WEBPACK_IMPORTED_MODULE_1__["initializeApp"])(firebaseConfig);
+const db = Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["getFirestore"])(); // Add user when they first use MiMi
 
-async function test(userID) {
+async function createUser(userId) {
   try {
-    console.log(userID);
-    const docRef = await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["setDoc"])(Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userID), {
-      first: "Ada",
-      last: "Lovelace",
-      born: 1815
+    await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["setDoc"])(Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId), {}, {
+      merge: true
     });
-    console.log("Document written with ID: ", userID);
+    console.log("Creating a profile for user ".concat(userId));
   } catch (e) {
-    console.error("Error adding document: ", e);
+    console.error("Error creating document: ", e);
+  }
+} // Delete user
+
+
+async function deleteUser(userId) {
+  try {
+    await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["deleteDoc"])(Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId));
+    console.log("Deleting all data for user ".concat(userId));
+  } catch (e) {
+    console.error("Error deleting document: ", e);
+  }
+} // Add domain and counter to user's document
+
+
+async function addOrEditDomain(userId, domain, counter) {
+  try {
+    const docRef = await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["setDoc"])(Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId), {
+      domain: counter
+    }, {
+      merge: true
+    });
+    console.log("Added domain ".concat(domain, " and counter ").concat(counter, " for user ").concat(userId));
+  } catch (e) {
+    console.error("Error adding domain: ", e);
+  }
+} // Retrieve counters for a user domain
+
+
+async function fetchCounter(userId, domain) {
+  const docRef = Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId);
+  const docSnap = await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["getDoc"])(docRef);
+
+  if (docSnap.exists() && docSnap.get(domain)) {
+    return docSnap.get(domain);
+  } else {
+    console.log("No such document or domain");
+    return undefined;
   }
 }
 
@@ -102647,40 +102672,109 @@ async function test(userID) {
 /*!********************************!*\
   !*** ./src/utils/functions.js ***!
   \********************************/
-/*! exports provided: generateMimi, generateRandomInt, secretShareCounter */
+/*! exports provided: createAndStoreIdAndToken, generateMimi, getCounter, resetCounter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createAndStoreIdAndToken", function() { return createAndStoreIdAndToken; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateMimi", function() { return generateMimi; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateRandomInt", function() { return generateRandomInt; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "secretShareCounter", function() { return secretShareCounter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCounter", function() { return getCounter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetCounter", function() { return resetCounter; });
 /* harmony import */ var _storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./storage */ "./src/utils/storage.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./src/utils/constants.js");
+/* harmony import */ var _firestore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./firestore */ "./src/utils/firestore.js");
 /*global chrome*/
 
 
 
-const sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js"); // we may need to await sodium.ready 
+const sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js"); // User auth, access to counters
 
+
+function createAndStoreIdAndToken() {
+  const uidToken = sodium.crypto_generichash(32);
+  const authToken = sodium.crypto_generichash(32);
+  _storage__WEBPACK_IMPORTED_MODULE_0__["save"]("userId", uidToken);
+  _storage__WEBPACK_IMPORTED_MODULE_0__["save"]("clientAuth", authToken);
+} // Hash the masterpass, domain name, and counter together to product the MiMi password
 
 const generateMimi = async function (seed, domain, counter) {
   await sodium.ready;
-  const concatSeed = seed + domain + counter;
-  let h = sodium.crypto_generichash(16, concatSeed);
-  console.log(h, sodium.to_hex(h), h.length);
-  return h;
-};
-const generateRandomInt = function (max) {
-  return Math.floor(Math.random() * max);
-};
-const secretShareCounter = function (domain) {
+  const clientAuthToken = await _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("clientAuth");
+  const concatSeed = seed + domain + counter + clientAuthToken;
+  let mimi = sodium.crypto_generichash(16, concatSeed);
+  console.log(mimi, sodium.to_hex(mimi), mimi.length);
+  return sodium.to_hex(mimi);
+}; // Get counter (1/3 of hashing inputs), called when cmd+shift+8
+
+const getCounter = function (pw, domain) {
+  let counter = passwordToInt(pw);
+  const uid = _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("userId");
+  const secret1 = Object(_firestore__WEBPACK_IMPORTED_MODULE_1__["fetchCounter"])(uid, domain); // const secret2 = fetchCounter2(uid, domain)
+
+  const isNewCounter = secret1 === undefined;
+
+  if (isNewCounter) {
+    // Create counter
+    counter += createOrEditCounter(uid, domain); // Currently regenerating, otherwise generate random num and + it to old counter
+  } else {
+    // Get existing counter
+    counter += secret1;
+  }
+
+  return counter;
+}; // Modify existing counter, called when "Change Password" clicked
+
+const resetCounter = function (pw, domain) {
+  let counter = passwordToInt(pw);
+  const uid = _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("userId");
+  counter += createOrEditCounter(uid, domain);
+  return counter;
+}; // Private helpers
+// Password from string to int
+
+const passwordToInt = function (pw) {
+  return sodium.to_string(pw); // TODO: currently an int array, not just an int
+}; // Generate and save server-side portion of counter
+
+
+const MAX_SUM = 10000;
+
+const createOrEditCounter = function (userId, domain) {
   // TODO
-  const MAX = 10000;
-  const shares = generateRandomInt(MAX); // db1[domain] = shares[0]
-  // db2[domain] = shares[1]
-  // db3[domain] = shares[2]
-  // return sum(shares)
+  // Generate secrets
+  const secret1 = generateRandomInts(MAX_SUM); // Secret sharing: write to 2 db's
+
+  Object(_firestore__WEBPACK_IMPORTED_MODULE_1__["addOrEditDomain"])(userId, domain, secret1); // Return sum of db portion of counter
+
+  return secret1;
+};
+
+const generateRandomInts = function (max) {
+  // sodium.randombytes_random()
+  // sodium.rand
+  const secret1 = sodium.randombytes_uniform(max);
+  const secret2 = sodium.randombytes_uniform(max);
+  return [1, 2]; // const randomSum = Math.floor(Math.random() * max)
+  // const secret1 = Math.floor(Math.random() * max)
+  // const secret2 = randomSum - secret1
+  // return [secret1, secret2]
+};
+
+const sum = function (arr) {
+  return arr.reduce((acc, el) => acc + el, 0);
+};
+
+let imgUrl = "https://" + props.site + "/favicon.ico"; //tests if a favicon exists at the above url
+
+let image = document.createElement("img");
+image.src = imgUrl;
+
+image.onload = () => {
+  setImageExists(true);
+};
+
+image.onerror = () => {
+  setImageExists(false);
 };
 
 /***/ }),
@@ -102698,14 +102792,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "save", function() { return save; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clear", function() { return clear; });
 /*global chrome*/
-
+let isLocal = false;
 /**
  * Retrieves the value of a key
  * @param {String} key
  */
+
 function getData(key) {
   return new Promise(resolve => {
-    chrome.storage.sync.get(key, result => {
+    chrome.storage[isLocal ? "local" : "sync"].get(key, result => {
       result[key] ? resolve(result[key]) : resolve(undefined);
     });
   });
@@ -102718,7 +102813,7 @@ function getData(key) {
 
 function save(key, value) {
   return new Promise(resolve => {
-    chrome.storage.sync.set({
+    chrome.storage[[isLocal ? "local" : "sync"]].set({
       [key]: value
     }, () => {
       resolve();

@@ -30,19 +30,6 @@
 				"mac": "Command+Shift+8"
 			},
 			"description": "Trigger hashing to produce the user's password"
-		},
-		"reload": {
-			"suggested_key": {
-				"default": "Ctrl+Shift+R",
-				"mac": "Command+Shift+Y"
-			},
-			"description": "Save a link"
-		},
-		"random": {
-			"suggested_key": {
-				"default": "Alt+Shift+L"
-			},
-			"description": "Load a random link"
 		}
 	},
 	"web_accessible_resources": ["content-script.js"],
