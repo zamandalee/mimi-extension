@@ -26,4 +26,3 @@ function doStuff() {
 	passField.value = mimi;
 }
 
-doStuff();
