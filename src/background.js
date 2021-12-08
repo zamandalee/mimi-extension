@@ -15,17 +15,25 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 // Keyboard shortcuts listener
-chrome.commands.onCommand.addListener(async (command) => {
+chrome.commands.onCommand.addListener(async command => {
 	console.log(`Command detected: ${command}`);
-
 	// Master password hashing
 	if (command === "hash_masterpass") {
-		let queryOptions = { active: true, currentWindow: true };
-		let [tab] = await chrome.tabs.query(queryOptions);
-		chrome.scripting.executeScript({
-			target: {tabId: tab.id},
-			files: ["content-script.js"],
+		let queryOptions = {active: true, currentWindow: true};
+		chrome.tabs.query(queryOptions, tabs => {
+			chrome.tabs.executeScript(tabs[0].id, {
+				file: "content-script.js",
+			  });
+			// Manifest v3
+			// chrome.scripting.executeScript({
+			// 	target: {tabId: tabs[0].id},
+			// 	files: ["content-script.js"],
+			// });
+			// let [tab] = await chrome.tabs.query(queryOptions);
+			// chrome.scripting.executeScript({
+			// 	target: {tabId: tab.id},
+			// 	files: ["content-script.js"],
+			// });
 		});
 	}
 });
-
