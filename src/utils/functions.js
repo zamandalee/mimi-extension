@@ -19,7 +19,7 @@ export const getCounter = function (pw, domain, isNewCounter=false) {
     let counter = passwordToInt(pw)
     if (isNewCounter) { // TODO
         // Write secrets to db's
-        counter += generateDbSecrets(domain) // Could do this individually, then add after, but could be tricky w write time/async
+        counter += generateDbSecrets(domain) // Currently regenerating, otherwise generate random num and + it to old counter
     } else {
         // Fetch secrets from db's
         // counter += db1[domain] + db2[domain]
@@ -28,9 +28,16 @@ export const getCounter = function (pw, domain, isNewCounter=false) {
     return counter
 }
 
-// Generate server-side portion of counter
+// Private helpers
+
+// Password from string to int
+const passwordToInt = function (pw) {
+    return sodium.to_string(pw) // TODO: currently an int array, not just an int
+}
+
+// Generate and save server-side portion of counter
 const MAX_SUM = 10000
-export const generateDbSecrets = function (domain) { // TODO
+const generateDbSecrets = function (domain) { // TODO
     // Generate secrets
     const shares = generateRandomInts(MAX_SUM)
     // Secret sharing: write to 2 db's
@@ -40,14 +47,12 @@ export const generateDbSecrets = function (domain) { // TODO
     return sum(shares)
 }
 
-// Private helpers
-const passwordToInt = function (pw) {
-
-}
-
 const generateRandomInts = function (max) {
     // sodium.randombytes_random()
     // sodium.rand
+    const secret1 = sodium.randombytes_uniform(max)
+    const secret2 = sodium.randombytes_uniform(max)
+
     return [1,2]
 
     // const randomSum = Math.floor(Math.random() * max)

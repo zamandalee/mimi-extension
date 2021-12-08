@@ -7,7 +7,9 @@ import { getCounter } from "./utils/functions";
 const domains = [] // TODO: fetch domains from backend!!
 
 ReactDOM.render(
-  <App domains={domains} changePassword={domain => getCounter(domain, true)}/>,
+  <App
+    domains={domains}
+    changePassword={domain => getCounter(domain, true)} />,
   document.getElementById('root')
 );
 
