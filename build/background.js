@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "cf2949909d16c572c345";
+/******/ 	var hotCurrentHash = "d7235af1a674375144e0";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -102697,7 +102697,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js"); // User auth, access to counters
+const sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js"); // TODO: not using anywhere?
+// User auth, access to counters
 
 
 const createAndStoreIdAndToken = async function () {
@@ -102730,12 +102731,10 @@ const getCounter = async function (domain) {
   return sum(shares);
 }; // Modify existing counter, called when "Change Password" clicked
 
-const resetCounter = function (pw, domain) {
-  let counter = passwordToInt(pw);
+const resetCounter = function (domain) {
   const uid = _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("userId");
-  counter += createOrEditCounter(uid, domain);
-  return counter;
-}; // Private helpers
+  createOrEditCounter(uid, domain);
+}; // ------------------ PRIVATE HELPERS: ------------------
 // Password from string to int
 
 const passwordToInt = function (pw) {

@@ -1,24 +1,31 @@
 import React from "react";
+import * as storage from "./utils/storage";
+import "tailwindcss/tailwind.css"
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-const IN_PROGRESS = 'IN_PROGRESS'
-const CHANGED = 'CHANGED'
-const UNCHANGED = 'UNCHANGED'
+import Collapsible from 'react-collapsible';
+import DomainListItem from "./domainListItem";
+import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
+var classNames = require('classnames');
 
 class App extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = { mimiDomains: {} }
+		this.handleChangePassword = this.handleChangePassword.bind(this, domain)
 	}
 
 	componentDidMount() {
 		const formattedDomains = {}
 		this.props.domains.forEach(domain => { formattedDomains[domain] = UNCHANGED })
-		this.setState({ mimiDomains: formattedDomains })
+		this.setState({ mimiDomains: formattedDomains, activeTab: 'vault' })
 	}
 
-	changePassword(domain) {
+	handleTabClick = (activeTab) => {
+		this.setState({ activeTab })
+	}
+
+	handleChangePassword = (domain) => {
 		// Show that domain pw change is in progress
 		this.setState({
 			mimiDomains: Object.assign({ domain: IN_PROGRESS }, this.state.mimiDomains)
@@ -31,49 +38,70 @@ class App extends React.Component {
 		})
 	}
 
+	deleteDomain = (uid, domain) => {
+		const newDomains = delete { ...this.state.mimiDomains }[domain]
+		this.props.deleteDomain(uid, domain).then(() => {
+			this.setState({ mimiDomains: newDomains })
+		})
+	}
+
 	render() {
+		const { mimiDomains, activeTab } = this.state
+		const uid = storage.getData("userId")
+
 		// Domain list
-		const { mimiDomains } = this.state
+		let domains = Object.keys(mimiDomains).map(domain => (
+			<DomainListItem
+				domain={domain}
+				status={mimiDomains[domain]}
+				handleChangePassword={this.handleChangePassword}
+				handleDeleteDomain={d => this.handleDeleteDomain(uid, d)} />
+		));
 
-		let domains = Object.keys(mimiDomains).map(domain => {
-			// Button to change password for this domain
-			let pwMessage = <div className="change-pw" onClick={this.changePassword.bind(this, domain)}>Change Password</div>
-			if (mimiDomains[domain] === IN_PROGRESS) {
-				// After Change Password button is clicked
-				pwMessage = <div className="pw-changing">Changing...</div>
-			} else {
-				// After pw successfully changed
-				pwMessage = <div className="pw-changed">Password changed.</div>
-			}
-			return (
-				<div key={domain} className="domain-item">
-					<div className="domain-name">{domain}</div>
-					{pwMessage}
-				</div>
-			);
-		});
-
-		// If no domains
+		// Empty domain list
 		if (Object.keys(mimiDomains).length === 0) {
 			domains = <div className="no-domains">No passwords saved with MiMi yet.</div>
 		}
 
-		return (
-			<div className="popup">
-				<div className="domains-index">
-					{domains}
-				</div>
-				<div>
-					<div className="popup-title">How to Use MiMi:</div>
+		// FAQs
+		const faqs = (
+			<div className="faqs">
+				<Collapsible trigger="How do I use MiMi?">
 					<ol>
 						<li>Click into a password input field</li>
 						<li>Fill in your MiMi master password</li>
 						<li>Hit command+shift+p to transform your master password</li>
 					</ol>
+				</Collapsible>
+				<Collapsible trigger="Is MiMi secure?"></Collapsible>
+			</div>
+		)
+
+		// Active tab logic
+		const vaultClass = classNames('cursor-pointer', { 'active': activeTab === 'vault' })
+		const faqClass = classNames('cursor-pointer', { 'active': activeTab === 'faq' })
+		const activeContent = activeTab === 'vault' ? (<div className="domains">{domains}</div>) : faqs
+
+		return (
+			<div className="popup">
+				<div className="tabs">
+					<div className={vaultClass}
+						onClick={this.handleTabClick.bind(this, 'vault')}>
+						Vault
+					</div>
+					<div className={faqClass}
+						onClick={this.handleTabClick.bind(this, 'faq')}>
+						FAQs
+					</div>
 				</div>
+
+				{activeContent}
 			</div>
 		);
 	}
 }
 
 export default App;
+
+
+

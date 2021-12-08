@@ -4,6 +4,7 @@ import * as storage from "./storage";
 import * as firestore from "./firestore";
 const sodium = require('libsodium-wrappers');
 
+ // TODO: not using anywhere?
 // User auth, access to counters
 export const createAndStoreIdAndToken = async function() {
     await sodium.ready
@@ -39,14 +40,12 @@ export const getCounter = async function (domain) {
 }
 
 // Modify existing counter, called when "Change Password" clicked
-export const resetCounter = function (pw, domain) {
-    let counter = passwordToInt(pw)
+export const resetCounter = function (domain) {
     const uid = storage.getData("userId")
-    counter += createOrEditCounter(uid, domain)
-    return counter
+    createOrEditCounter(uid, domain)
 }
 
-// Private helpers
+// ------------------ PRIVATE HELPERS: ------------------
 
 // Password from string to int
 const passwordToInt = function (pw) {

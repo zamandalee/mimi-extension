@@ -39,4 +39,3 @@ async function doStuff() {
 	document.body.dispatchEvent(ke);
 }
 
-doStuff();
