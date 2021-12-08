@@ -1,7 +1,7 @@
 import React from "react";
-var classNames = require('classnames');
 import DomainImage from './domainImage'
 import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
+var classNames = require('classnames');
 
 
 class DomainListItem extends React.Component {
@@ -37,7 +37,7 @@ class DomainListItem extends React.Component {
     return (
       <div key={domain} className="domain-item">
         <div>
-          <DomainImage />
+          <DomainImage domain={domain} />
           <div className="domain-name">{domain}</div>
         </div>
         <div>

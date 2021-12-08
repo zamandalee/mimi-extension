@@ -1,18 +1,18 @@
 import React from "react";
-import * as storage from "./utils/storage";
-import "tailwindcss/tailwind.css"
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Collapsible from 'react-collapsible';
+import "tailwindcss/tailwind.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 import DomainListItem from "./domainListItem";
+import * as storage from "./utils/storage";
 import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
+
 var classNames = require('classnames');
 
 class App extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = { mimiDomains: {} }
-		this.handleChangePassword = this.handleChangePassword.bind(this, domain)
 	}
 
 	componentDidMount() {

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 export default function DomainImage(props) {
   const [imageExists, setImageExists] = useState(false);
-  let imgUrl = "https://" + props.site + "/favicon.ico";
+  let imgUrl = "https://" + props.domain + "/favicon.ico";
 
   //tests if a favicon exists at the above url
   let image = document.createElement("img");
@@ -25,7 +25,7 @@ export default function DomainImage(props) {
           height: "100%"
         }}
       ></img>
-      {props.site}
+      {props.domain}
     </div>
   );
 }
