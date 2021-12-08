@@ -4,6 +4,7 @@ import * as storage from "./storage";
 import { fetchCounter, addOrEditDomain } from "./firestore";
 const sodium = require('libsodium-wrappers');
 
+ // TODO: not using anywhere?
 // User auth, access to counters
 export function createAndStoreIdAndToken() {
     const uidToken = sodium.crypto_generichash(32);
@@ -40,14 +41,12 @@ export const getCounter = function (pw, domain) {
 }
 
 // Modify existing counter, called when "Change Password" clicked
-export const resetCounter = function (pw, domain) {
-    let counter = passwordToInt(pw)
+export const resetCounter = function (domain) {
     const uid = storage.getData("userId")
-    counter += createOrEditCounter(uid, domain)
-    return counter
+    createOrEditCounter(uid, domain)
 }
 
-// Private helpers
+// ------------------ PRIVATE HELPERS: ------------------
 
 // Password from string to int
 const passwordToInt = function (pw) {
@@ -58,25 +57,24 @@ const passwordToInt = function (pw) {
 const MAX_SUM = 10000
 const createOrEditCounter = function (userId, domain) { // TODO
     // Generate secrets
-    const secret1 = generateRandomInts(MAX_SUM)
+    const secret1 = generateRandomInt(MAX_SUM)
     // Secret sharing: write to 2 db's
     addOrEditDomain(userId, domain, secret1)
-    // Return sum of db portion of counter
+    // Return total db portion of counter
     return secret1
 }
 
-const generateRandomInts = function (max) {
+// Generate secret
+const generateRandomInt = function (max) { // TODO
     // sodium.randombytes_random()
     // sodium.rand
     const secret1 = sodium.randombytes_uniform(max)
     const secret2 = sodium.randombytes_uniform(max)
 
-    return [1,2]
+    return 1
 
-    // const randomSum = Math.floor(Math.random() * max)
-    // const secret1 = Math.floor(Math.random() * max)
-    // const secret2 = randomSum - secret1
-    // return [secret1, secret2]
+    // const secret = Math.floor(Math.random() * max)
+    // return secret
 }
 
 const sum = function (arr) {
