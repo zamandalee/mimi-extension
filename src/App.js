@@ -1,6 +1,6 @@
 import React from "react";
 import Collapsible from 'react-collapsible';
-import "tailwindcss/tailwind.css"
+// import "tailwindcss/tailwind.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import DomainListItem from "./domainListItem";
@@ -12,16 +12,17 @@ var classNames = require('classnames');
 class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { mimiDomains: {} }
+		this.state = { mimiDomains: {}, activeTab: 'vault' }
 	}
 
 	componentDidMount() {
 		const formattedDomains = {}
 		this.props.domains.forEach(domain => { formattedDomains[domain] = UNCHANGED })
-		this.setState({ mimiDomains: formattedDomains, activeTab: 'vault' })
+		this.setState({ mimiDomains: formattedDomains })
 	}
 
 	handleTabClick = (activeTab) => {
+		console.log('asd;fklja;sdlfkj;asldkfja;lsdfj')
 		this.setState({ activeTab })
 	}
 
@@ -78,13 +79,13 @@ class App extends React.Component {
 		)
 
 		// Active tab logic
-		const vaultClass = classNames('cursor-pointer', { 'active': activeTab === 'vault' })
-		const faqClass = classNames('cursor-pointer', { 'active': activeTab === 'faq' })
+		const vaultClass = classNames('tab mr3', { 'active': activeTab === 'vault' })
+		const faqClass = classNames('tab', { 'active': activeTab === 'faq' })
 		const activeContent = activeTab === 'vault' ? (<div className="domains">{domains}</div>) : faqs
 
 		return (
 			<div className="popup">
-				<div className="tabs">
+				<div className="flex justify-start content-center f4 pb3">
 					<div className={vaultClass}
 						onClick={this.handleTabClick.bind(this, 'vault')}>
 						Vault

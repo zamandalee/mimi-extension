@@ -21,9 +21,9 @@ class DomainListItem extends React.Component {
   render() {
     const { domain, status } = this.props
     // Change pw button
-    let changeBtn = (<div className="change-btn" onClick={this.handleChangePassword}>Change</div>)
+    let changeBtn = (<div className="change-btn mr2" onClick={this.handleChangePassword}>Change</div>)
     if (status !== UNCHANGED) {
-      const changeClass = classNames({
+      const changeClass = classNames('mr2', {
         'changing': status === IN_PROGRESS,
         'changed': status === CHANGED,
       })
@@ -35,14 +35,14 @@ class DomainListItem extends React.Component {
     }
     // Item
     return (
-      <div key={domain} className="domain-item">
-        <div>
+      <div key={domain} className="domain-item flex justify-between align-center pb3">
+        <div className="flex content-center align-center">
           <DomainImage domain={domain} />
-          <div className="domain-name">{domain}</div>
+          <div className="domain-name ml2">{domain}</div>
         </div>
-        <div>
+        <div className="flex content-center align-center">
           {changeBtn}
-          <div className="delete-btn" onClick={this.handleDeleteDomain}>Change</div>
+          <div className="delete-btn" onClick={this.handleDeleteDomain}>Delete</div>
         </div>
       </div>
     );

@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body, #root {
   margin: 0;
   padding: 0;
@@ -5,8 +9,6 @@ html, body, #root {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  width: 500px;
-  height: 500px;
 }
 p {
   margin: 0 !important;
@@ -60,10 +62,9 @@ input[type=number] {
 }
 
 body {
-  height: 350px;
-  width: 275px;
-  box-sizing: border-box;
-  padding: 20px;
+  width: 400px;
+  height: 475px;
+  padding: 30px;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
 }
@@ -72,4 +73,58 @@ body {
 }
 li {
   padding: 5px 0;
+}
+
+/* popup tabs */
+.tab {
+  transition: all 0.3s ease-in-out;
+  color: darkgray;
+}
+.tab.active {
+  color: black;
+}
+/* .tab.active::after {
+  width: 100%;
+  border-bottom: 1px solid black;
+} */
+.tab::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 1px;
+  background: #dd5152;
+  transition: width .3s;
+}
+.tab:hover::after {
+  width: 100%;
+  border-bottom: 1px solid #dd5152;
+}
+.tab:hover {
+  color: #dd5152;
+  cursor: pointer;
+  border-bottom: none;
+}
+
+/* domain list item */
+.domain-name {
+  font-size: 17px;
+}
+
+.change-btn, .delete-btn {
+  margin-top: 3px;
+  padding: 2px 6px;
+  border-radius: 7px;
+  font-size: 13px;
+  color: white;
+  cursor: pointer;
+}
+.change-btn {
+  /* border: 1px solid gray;
+  color: gray; */
+  background: gray;
+}
+.delete-btn {
+  /* border: 1px solid #dd5152;
+  color: #dd5152; */
+  background: #dd5152;
 }
