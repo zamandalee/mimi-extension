@@ -9,7 +9,7 @@ const domains = [] // TODO: fetch domains from backend!!
 ReactDOM.render(
   <App
     domains={domains}
-    changePassword={domain => getCounter(domain, true)} />,
+    changePassword={domain => getCounter(domain)} />,
   document.getElementById('root')
 );
 

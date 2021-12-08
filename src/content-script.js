@@ -12,11 +12,9 @@ const masterPass = passField.value;
 // 2. Get website domain name
 const domain = window.location.hostname
 
-// 3. Get/create counter from local storage & decrypt with master password TODO
+// 3. Get/create counter from local storage & decrypt with master password
 // Counter = sum(each of 3 shares and masterpass turned into int)
-// const isNewCounter = !(domain in db1 && domain in db2)
-const isNewCounter = false // TODO temp
-const counter = getCounter(masterPass, domain, isNewCounter)
+const counter = getCounter(masterPass, domain)
 
 // 4. Get client-auth token SKIP
 // 5. Use generateMimi to get encrypted password

@@ -1,5 +1,6 @@
 import {getFirestore, collection, doc, setDoc, getDoc, deleteDoc} from "firebase/firestore";
 import {initializeApp} from "@firebase/app";
+
 // Firebase configuration
 const firebaseConfig = {
 	apiKey: "AIzaSyBrdxO2cgm9IHJw8bRIn-8SfK_jIK4KRSY",
@@ -10,7 +11,7 @@ const firebaseConfig = {
 	appId: "1:772480921178:web:ef3f46e1446c6e5424b263",
 	measurementId: "G-98705SB5MM",
 };
-// const firebaseApp = initializeApp(firebaseConfig);
+
 initializeApp(firebaseConfig);
 const db = getFirestore();
 
@@ -24,17 +25,18 @@ async function createUser(userId) {
 	}
 }
 
+// Delete user
 async function deleteUser(userId) {
 	try {
 		await deleteDoc(doc(db, "users", userId));
 		console.log(`Deleting all data for user ${userId}`);
 	} catch (e) {
-		console.error("Error creating document: ", e);
+		console.error("Error deleting document: ", e);
 	}
 }
 
 // Add domain and counter to user's document
-async function addDomain(userId, domain, counter) {
+async function addOrEditDomain(userId, domain, counter) {
 	try {
 		const docRef = await setDoc(doc(db, "users", userId), {domain: counter}, {merge: true});
 		console.log(`Added domain ${domain} and counter ${counter} for user ${userId}`);
@@ -43,14 +45,16 @@ async function addDomain(userId, domain, counter) {
 	}
 }
 
-async function retrieveCounter(userId, domain) {
-    const docRef = doc(db, "users", userId) 
+// Retrieve counters for a user domain
+async function fetchCounter(userId, domain) {
+    const docRef = doc(db, "users", userId)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists() && docSnap.get(domain)) {
         return docSnap.get(domain)
     } else {
         console.log("No such document or domain");
+				return undefined
     }
 }
 
-export {createUser, addDomain};
+export { createUser, deleteUser, addOrEditDomain, fetchCounter};

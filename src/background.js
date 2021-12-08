@@ -8,7 +8,7 @@ import {getData} from "./utils/storage";
 chrome.runtime.onInstalled.addListener(function (details) {
 	if (details.reason === "install") {
 		//First install! Generate & store clientAuth token
-		if (getData("client_auth") === undefined) {
+		if (getData("clientAuth") === undefined) {
 			functions.createAndStoreClientAuthToken();
 		}
 	}
