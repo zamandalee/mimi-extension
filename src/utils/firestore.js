@@ -1,5 +1,5 @@
-import { getFirestore, collection, doc, setDoc } from "firebase/firestore"
-import { initializeApp } from "@firebase/app";
+import {getFirestore, collection, doc, setDoc, getDoc, deleteDoc} from "firebase/firestore";
+import {initializeApp} from "@firebase/app";
 // Firebase configuration
 const firebaseConfig = {
 	apiKey: "AIzaSyBrdxO2cgm9IHJw8bRIn-8SfK_jIK4KRSY",
@@ -12,29 +12,45 @@ const firebaseConfig = {
 };
 // const firebaseApp = initializeApp(firebaseConfig);
 initializeApp(firebaseConfig);
-const db = getFirestore()
+const db = getFirestore();
 
 // Add user when they first use MiMi
 async function createUser(userId) {
 	try {
-		const docRef = await setDoc(
-			doc(db, "users", userId), {}
-		)
-		console.log(`Creating document ${docRef} for user ${userId}`)
+		await setDoc(doc(db, "users", userId), {}, {merge: true});
+		console.log(`Creating a profile for user ${userId}`);
 	} catch (e) {
 		console.error("Error creating document: ", e);
 	}
 }
-// Add domain and counter to user's document
-async function addDomain(userId, domain, counter) {
+
+async function deleteUser(userId) {
 	try {
-		const docRef = await setDoc(
-			doc(db, "users", userId), {domain: counter}
-		)
-		console.log(`Added domain ${domain} and counter ${counter} for user ${userId}`)
+		await deleteDoc(doc(db, "users", userId));
+		console.log(`Deleting all data for user ${userId}`);
 	} catch (e) {
-		console.error("Error adding domain: ", e)
+		console.error("Error creating document: ", e);
 	}
 }
 
-export { createUser, addDomain }
+// Add domain and counter to user's document
+async function addDomain(userId, domain, counter) {
+	try {
+		const docRef = await setDoc(doc(db, "users", userId), {domain: counter}, {merge: true});
+		console.log(`Added domain ${domain} and counter ${counter} for user ${userId}`);
+	} catch (e) {
+		console.error("Error adding domain: ", e);
+	}
+}
+
+async function retrieveCounter(userId, domain) {
+    const docRef = doc(db, "users", userId) 
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists() && docSnap.get(domain)) {
+        return docSnap.get(domain)
+    } else {
+        console.log("No such document or domain");
+    }
+}
+
+export {createUser, addDomain};
