@@ -9,26 +9,23 @@ chrome.runtime.onInstalled.addListener(function (details) {
 	if (details.reason === "install") {
 		//First install! Generate & store clientAuth token
 		if (getData("clientAuth") === undefined) {
-			functions.createAndStoreClientAuthToken();
+			functions.createAndStoreIdAndToken();
 		}
 	}
 });
 
 // Keyboard shortcuts listener
-chrome.commands.onCommand.addListener(command => {
+chrome.commands.onCommand.addListener(async (command) => {
 	console.log(`Command detected: ${command}`);
 
 	// Master password hashing
 	if (command === "hash_masterpass") {
-		chrome.tabs.query({active: true, currentWindow: true}).then(([tab]) => {
-			chrome.scripting.executeScript({
-				target: {tabId: tab.id},
-				files: ["js/hashing-script.js"],
-			});
+		let queryOptions = { active: true, currentWindow: true };
+		let [tab] = await chrome.tabs.query(queryOptions);
+		chrome.scripting.executeScript({
+			target: {tabId: tab.id},
+			files: ["content-script.js"],
 		});
 	}
-	// Hot reload hack
-	else if (command === "reload") {
-		chrome.runtime.reload();
-	}
 });
+

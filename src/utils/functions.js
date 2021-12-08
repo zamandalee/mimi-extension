@@ -82,3 +82,16 @@ const generateRandomInts = function (max) {
 const sum = function (arr) {
     return arr.reduce((acc, el) => acc + el, 0)
 }
+
+
+let imgUrl = "https://" + props.site + "/favicon.ico";
+
+  //tests if a favicon exists at the above url
+  let image = document.createElement("img");
+  image.src = imgUrl;
+  image.onload = () => {
+    setImageExists(true);
+  };
+  image.onerror = () => {
+    setImageExists(false);
+  };
