@@ -1,14 +1,15 @@
 /*global chrome*/
 
 import * as storage from "./storage";
-import { fetchCounter, addOrEditDomain } from "./firestore";
+import * as firestore from "./firestore";
 const sodium = require('libsodium-wrappers');
 
  // TODO: not using anywhere?
 // User auth, access to counters
-export function createAndStoreIdAndToken() {
-    const uidToken = sodium.crypto_generichash(32);
-    const authToken = sodium.crypto_generichash(32);
+export const createAndStoreIdAndToken = async function() {
+    await sodium.ready
+    const uidToken = sodium.to_hex(sodium.randombytes_buf(32));
+    const authToken = sodium.to_hex(sodium.randombytes_buf(32));
     storage.save("userId", uidToken)
     storage.save("clientAuth", authToken)
 }
@@ -17,27 +18,25 @@ export function createAndStoreIdAndToken() {
 export const generateMimi = async function (seed, domain, counter) {
     await sodium.ready
     const clientAuthToken = await storage.getData("clientAuth")
+
     const concatSeed = seed + domain + counter + clientAuthToken
     let mimi = sodium.crypto_generichash(16, concatSeed);
-    console.log(mimi, sodium.to_hex(mimi), mimi.length);
-    return sodium.to_hex(mimi)
+    mimi = sodium.to_hex(mimi)
+    return mimi
 }
 
-// Get counter (1/3 of hashing inputs), called when cmd+shift+8
-export const getCounter = function (pw, domain) {
-    let counter = passwordToInt(pw)
-    const uid = storage.getData("userId")
-
-    const secret1 = fetchCounter(uid, domain)
-    // const secret2 = fetchCounter2(uid, domain)
-    const isNewCounter = secret1 === undefined
-
-    if (isNewCounter) { // Create counter
-        counter += createOrEditCounter(uid, domain) // Currently regenerating, otherwise generate random num and + it to old counter
-    } else {  // Get existing counter
-        counter += secret1
+// Get counter (1/3 of hashing inputs), possibly by combining multiple counter shares stored in separate DBs
+export const getCounter = async function (domain) {
+    const uid = await storage.getData("userId")
+    // Counter doesn't exist for this domain. Generate a new one. 
+    const isNewCounter = await firestore.fetchCounter(uid, domain) === undefined
+    if (isNewCounter) {
+        await createOrEditCounter(uid, domain)
     }
-    return counter
+    const shares = [
+        await firestore.fetchCounter(uid, domain),
+    ]
+    return sum(shares)
 }
 
 // Modify existing counter, called when "Change Password" clicked
@@ -54,27 +53,13 @@ const passwordToInt = function (pw) {
 }
 
 // Generate and save server-side portion of counter
-const MAX_SUM = 10000
-const createOrEditCounter = function (userId, domain) { // TODO
+const createOrEditCounter = async function (userId, domain) { // TODO
+    const MAX_COUNTER_SHARE_VALUE = 10000
     // Generate secrets
-    const secret1 = generateRandomInt(MAX_SUM)
+    const secret1 = sodium.randombytes_random()
     // Secret sharing: write to 2 db's
-    addOrEditDomain(userId, domain, secret1)
-    // Return total db portion of counter
-    return secret1
-}
-
-// Generate secret
-const generateRandomInt = function (max) { // TODO
-    // sodium.randombytes_random()
-    // sodium.rand
-    const secret1 = sodium.randombytes_uniform(max)
-    const secret2 = sodium.randombytes_uniform(max)
-
-    return 1
-
-    // const secret = Math.floor(Math.random() * max)
-    // return secret
+    await firestore.setDomain(userId, domain, secret1)
+    // another DB here
 }
 
 const sum = function (arr) {

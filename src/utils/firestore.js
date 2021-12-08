@@ -1,4 +1,4 @@
-import {getFirestore, collection, doc, setDoc, getDoc, deleteDoc} from "firebase/firestore";
+import {getFirestore, deleteField, doc, setDoc, getDoc, updateDoc, deleteDoc} from "firebase/firestore";
 import {initializeApp} from "@firebase/app";
 
 // Firebase configuration
@@ -36,25 +36,36 @@ async function deleteUser(userId) {
 }
 
 // Add domain and counter to user's document
-async function addOrEditDomain(userId, domain, counter) {
+async function setDomain(userId, domain, counter) {
 	try {
-		const docRef = await setDoc(doc(db, "users", userId), {domain: counter}, {merge: true});
+		await setDoc(doc(db, "users", userId), {[domain]: counter}, {merge: true});
 		console.log(`Added domain ${domain} and counter ${counter} for user ${userId}`);
 	} catch (e) {
 		console.error("Error adding domain: ", e);
 	}
 }
 
-// Retrieve counters for a user domain
-async function fetchCounter(userId, domain) {
+// Delete a domain
+async function deleteDomain(userId, domain) {
     const docRef = doc(db, "users", userId)
-    const docSnap = await getDoc(docRef)
-    if (docSnap.exists() && docSnap.get(domain)) {
-        return docSnap.get(domain)
-    } else {
-        console.log("No such document or domain");
-				return undefined
-    }
+    await updateDoc(docRef, {
+        [domain]: deleteField()
+    });
 }
 
-export { createUser, deleteUser, addOrEditDomain, fetchCounter};
+// Retrieve counters for a user domain. 
+async function fetchCounter(userId, domain) {
+	const docRef = doc(db, "users", userId);
+	const docSnap = await getDoc(docRef);
+    const countersTable = docSnap.data()
+    return domain in countersTable ? countersTable[domain] : undefined
+}
+
+async function fetchAllDomains(userId) {
+    const docRef = doc(db, "users", userId);
+	const docSnap = await getDoc(docRef);
+    const countersTable = docSnap.data()
+    return Object.keys(countersTable)
+}
+
+export {createUser, deleteUser, setDomain, fetchCounter};
