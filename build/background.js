@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "d7235af1a674375144e0";
+/******/ 	var hotCurrentHash = "0076836c5b92e11a8e3b";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -102590,7 +102590,7 @@ chrome.commands.onCommand.addListener(async command => {
 /*!********************************!*\
   !*** ./src/utils/firestore.js ***!
   \********************************/
-/*! exports provided: createUser, deleteUser, setDomain, fetchCounter */
+/*! exports provided: createUser, deleteUser, setDomain, deleteDomain, fetchCounter, fetchAllDomains */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -102598,7 +102598,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteUser", function() { return deleteUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDomain", function() { return setDomain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteDomain", function() { return deleteDomain; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchCounter", function() { return fetchCounter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAllDomains", function() { return fetchAllDomains; });
 /* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 

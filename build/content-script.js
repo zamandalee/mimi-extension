@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "d7235af1a674375144e0";
+/******/ 	var hotCurrentHash = "0076836c5b92e11a8e3b";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -103219,21 +103219,20 @@ module.exports = function (module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var parse_domain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! parse-domain */ "./node_modules/parse-domain/build-esm/src/main.js");
 /* harmony import */ var _utils_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/functions */ "./src/utils/functions.js");
-/* harmony import */ var _utils_storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/storage */ "./src/utils/storage.js");
+/*global chrome*/
 // Content script, programmatically injected with keyboard shortcut
 
 /**
- * To-Do: 
- * Fix domain 
+ * To-Do:
+ * Fix domain
+ * Add QR codes
  * Make mimi passwords correct characters
+ * Make enter work
  */
 
-/*global chrome*/
 
 
-
-
-async function doStuff() {
+(async function doStuff() {
   // 1. Get user's inputted plaintext password
   let passField = document.querySelector(":focus");
   const masterPass = passField.value; // 2. Get website domain name
@@ -103249,14 +103248,13 @@ async function doStuff() {
   console.log("Inputs: ", masterPass, domain, counter);
   console.log("Output: ", mimi); // 6. Input encrypted password to form field
 
-  passField.value = mimi;
-  const ke = new KeyboardEvent("keydown", {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 13
-  });
-  document.body.dispatchEvent(ke);
-}
+  passField.value = mimi; // const ke = new KeyboardEvent("keydown", {
+  // 	bubbles: true,
+  // 	cancelable: true,
+  // 	keyCode: 13,
+  // });
+  // document.dispatchEvent(ke)
+})();
 
 /***/ }),
 
@@ -103264,7 +103262,7 @@ async function doStuff() {
 /*!********************************!*\
   !*** ./src/utils/firestore.js ***!
   \********************************/
-/*! exports provided: createUser, deleteUser, setDomain, fetchCounter */
+/*! exports provided: createUser, deleteUser, setDomain, deleteDomain, fetchCounter, fetchAllDomains */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -103272,7 +103270,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteUser", function() { return deleteUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDomain", function() { return setDomain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteDomain", function() { return deleteDomain; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchCounter", function() { return fetchCounter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAllDomains", function() { return fetchAllDomains; });
 /* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 

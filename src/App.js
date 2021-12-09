@@ -12,7 +12,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = { mimiDomains: {} }
-		this.handleChangePassword = this.handleChangePassword.bind(this, domain)
+		this.handleChangePassword = this.handleChangePassword.bind(this)
 	}
 
 	componentDidMount() {
