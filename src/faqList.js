@@ -2,6 +2,7 @@ import React from "react";
 import Collapsible from 'react-collapsible';
 
 export default function FAQList(props) {
+
   return (
     <div className="content">
       <Collapsible trigger="How do I use MiMi?" open={true}>

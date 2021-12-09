@@ -68,7 +68,7 @@ body, #root, .popup, .content {
 body {
   width: 350px;
   height: 450px;
-  padding: 20px 30px 30px 30px;
+  padding: 20px 30px 25px 30px;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
 }
@@ -83,7 +83,7 @@ li {
   display: block;
   max-height: 40px;
   max-width: 40%;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 /* popup tabs */
 .tab {
@@ -102,7 +102,6 @@ li {
   width: 100%;
   border-bottom: 1px solid darkgray;
 }
-
 .tab.active {
   color: black;
 }
@@ -118,13 +117,13 @@ li {
 
 /* content */
 .content {
-  margin-top: 15px;
+  margin-top: 17px;
   overflow: scroll;
 }
 
 /* domain list item */
 .domain-name {
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .change-btn, .delete-btn {
@@ -151,7 +150,6 @@ li {
 
 
 /* todos:
-- add mimi and logo to top
 - test button functionality
 - refactor domainList into separate component
  */
