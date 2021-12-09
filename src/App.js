@@ -48,6 +48,10 @@ class App extends React.Component {
 		})
 	}
 
+	handleConfigChange = (option, isChecked) => {
+		storage.save(option, isChecked)
+	}
+
 	render() {
 		const { mimiDomains, activeTab } = this.state
 		const uid = storage.getData("userId")
@@ -75,7 +79,7 @@ class App extends React.Component {
 
 		let activeContent = (<div className="content">{domains}</div>)
 		if (activeTab === 'options') {
-			activeContent = <OptionsContent />
+			activeContent = <OptionsContent handleChange={this.handleConfigChange} />
 		} else if (activeTab === 'faq') {
 			activeContent = <FaqContent />
 		}

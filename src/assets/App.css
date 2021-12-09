@@ -148,7 +148,7 @@ li {
 
 /* Collapsible */
 .Collapsible {
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 }
 .Collapsible__trigger {
   display: block;
@@ -185,9 +185,17 @@ li {
 .Collapsible__trigger.is-open::after {
   transform: rotateZ(180deg);
 }
+.Collapsible__contentInner {
+  margin-left: 10px;
+}
 
 /* faqs */
-
+.ml-neg20 {
+  margin-left: -20px;
+}
+.ml-neg15 {
+  margin-left: -15px;
+}
 
 
 /* todos:
