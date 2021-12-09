@@ -1,16 +1,17 @@
+/*global chrome*/
 // Content script, programmatically injected with keyboard shortcut
 import {parseDomain, ParseResultType} from "parse-domain";
 
 /**
- * To-Do: 
- * Fix domain 
+ * To-Do:
+ * Fix domain
+ * Add QR codes
  * Make mimi passwords correct characters
+ * Make enter work
  */
-/*global chrome*/
 import {getCounter, generateMimi} from "./utils/functions";
-import * as storage from "./utils/storage";
 
-async function doStuff() {
+(async function doStuff() {
 	// 1. Get user's inputted plaintext password
 	let passField = document.querySelector(":focus");
 	const masterPass = passField.value;
@@ -21,7 +22,6 @@ async function doStuff() {
 	// 3. Get/create counter from local storage & decrypt with master password
 	// Counter = sum(each of 3 shares and masterpass turned into int)
 	const counter = await getCounter(domain);
-
 	// 4. Get client-auth token SKIP
 	// 5. Use generateMimi to get encrypted password
 	const mimi = await generateMimi(masterPass, domain, counter);
@@ -31,11 +31,10 @@ async function doStuff() {
 
 	// 6. Input encrypted password to form field
 	passField.value = mimi;
-	const ke = new KeyboardEvent("keydown", {
-		bubbles: true,
-		cancelable: true,
-		keyCode: 13,
-	});
-	document.body.dispatchEvent(ke);
-}
-
+	// const ke = new KeyboardEvent("keydown", {
+	// 	bubbles: true,
+	// 	cancelable: true,
+	// 	keyCode: 13,
+	// });
+	// document.dispatchEvent(ke)
+})();

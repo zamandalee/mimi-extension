@@ -3,7 +3,6 @@ import DomainImage from './domainImage'
 import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
 var classNames = require('classnames');
 
-
 class DomainListItem extends React.Component {
   constructor(props) {
     super(props)

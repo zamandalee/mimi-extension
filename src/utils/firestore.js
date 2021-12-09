@@ -68,4 +68,4 @@ async function fetchAllDomains(userId) {
     return Object.keys(countersTable)
 }
 
-export { createUser, deleteUser, setDomain, deleteDomain, fetchCounter, fetchAllDomains };
+export {createUser, deleteUser, setDomain, deleteDomain, fetchCounter, fetchAllDomains};
