@@ -17,7 +17,7 @@ export default function DomainImage(props) {
 
   return (
     <img
-      src={imageExists ? imgUrl : require("./missingImage.jpg")}
+      src={imageExists ? imgUrl : require("../assets/missingImage.jpg")}
       alt={props.domain}
       style={{
         height: "25px"

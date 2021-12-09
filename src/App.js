@@ -1,11 +1,12 @@
 import React from "react";
 // import "tailwindcss/tailwind.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import logo from "./full-logo.png"
-import FAQList from "./faqList"
-import DomainList from "./domainList"
-import DomainListItem from "./domainListItem";
+import "./assets/App.css";
+import logo from "./assets/full-logo.png"
+import DomainList from "./components/DomainContent"
+import OptionsContent from "./components/OptionsContent"
+import FaqContent from "./components/FaqContent"
+import DomainListItem from "./components/DomainContentItem";
 import * as storage from "./utils/storage";
 import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
 
@@ -14,7 +15,7 @@ var classNames = require('classnames');
 class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { mimiDomains: {}, activeTab: 'vault' }
+		this.state = { mimiDomains: {}, activeTab: 'options' }
 	}
 
 	componentDidMount() {
@@ -24,7 +25,6 @@ class App extends React.Component {
 	}
 
 	handleTabClick = (activeTab) => {
-		console.log('asd;fklja;sdlfkj;asldkfja;lsdfj')
 		this.setState({ activeTab })
 	}
 
@@ -70,16 +70,27 @@ class App extends React.Component {
 
 		// Active tab logic
 		const vaultClass = classNames('tab mr3', { 'active': activeTab === 'vault' })
+		const optionsClass = classNames('tab mr3', { 'active': activeTab === 'options' })
 		const faqClass = classNames('tab', { 'active': activeTab === 'faq' })
-		const activeContent = activeTab === 'vault' ? (<div className="content">{domains}</div>) : <FAQList />
+
+		let activeContent = (<div className="content">{domains}</div>)
+		if (activeTab === 'options') {
+			activeContent = <OptionsContent />
+		} else if (activeTab === 'faq') {
+			activeContent = <FaqContent />
+		}
 
 		return (
 			<div className="popup flex flex-column align-start">
 				<img className="logo" src={logo} />
-				<div className="flex justify-start content-center f4">
+				<div className="flex justify-start content-center">
 					<div className={vaultClass}
 						onClick={this.handleTabClick.bind(this, 'vault')}>
 						Vault
+					</div>
+					<div className={optionsClass}
+						onClick={this.handleTabClick.bind(this, 'options')}>
+						Options
 					</div>
 					<div className={faqClass}
 						onClick={this.handleTabClick.bind(this, 'faq')}>

@@ -68,7 +68,7 @@ body, #root, .popup, .content {
 body {
   width: 350px;
   height: 450px;
-  padding: 20px 30px 25px 30px;
+  padding: 20px 25px;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
 }
@@ -88,6 +88,7 @@ li {
 /* popup tabs */
 .tab {
   transition: all 0.3s ease-in-out;
+  font-size: 19px;
   color: darkgray;
 }
 .tab::after {
@@ -145,11 +146,53 @@ li {
   background: #dd5152;
 }
 
+/* Collapsible */
+.Collapsible {
+  padding-bottom: 10px;
+}
+.Collapsible__trigger {
+  display: block;
+  font-weight: 400;
+  text-decoration: none;
+  position: relative;
+}
+.Collapsible__trigger::after {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+/* .icon::after {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+} */
+.Collapsible__trigger::after {
+  /* font-family: "Font Awesome 5 Free";
+  content: "\f007"; */
+  content: "🔽";
+  /* font-family: 'Font Awesome 5 Free';
+  content: '\f107'; */
+  position: absolute;
+  right: 0;
+  top: 2px;
+  display: block;
+  transition: transform 300ms;
+}
+.Collapsible__trigger.is-open::after {
+  transform: rotateZ(180deg);
+}
+
 /* faqs */
 
 
 
 /* todos:
-- test button functionality
+- options checkboxes and functions
+- faq tab styling
+- demo the whole thing
 - refactor domainList into separate component
  */

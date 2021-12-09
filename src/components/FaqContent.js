@@ -1,11 +1,9 @@
 import React from "react";
 import Collapsible from 'react-collapsible';
-import MimiQR from "./components/MimiQR"
-export default function FAQList(props) {
 
+export default function FaqContent(props) {
   return (
     <div className="content">
-      <MimiQR/>
       <Collapsible trigger="How do I use MiMi?" open={true}>
         <ol>
           <li>Click into a password input field</li>
