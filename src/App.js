@@ -29,7 +29,7 @@ class App extends React.Component {
 		this.props.changePassword(domain)
 	}
 
-	deleteDomain = (uid, domain) => {
+	handleDeleteDomain = (uid, domain) => {
 		const newDomains = this.state.mimiDomains.filter(el => el !== domain)
 		this.props.deleteDomain(uid, domain)
 		this.setState({ mimiDomains: newDomains })
@@ -44,13 +44,12 @@ class App extends React.Component {
 		const uid = storage.getData("userId")
 
 		// Domain list
-		console.log(mimiDomains)
 		let domains = mimiDomains.map(domain => (
 			<DomainListItem
 				key={domain}
 				domain={domain}
 				handleChangePassword={this.handleChangePassword}
-				handleDeleteDomain={d => this.handleDeleteDomain(uid, domain)} />
+				handleDeleteDomain={(d) => this.handleDeleteDomain(uid, d)} />
 		));
 
 		// Empty domain list

@@ -9,8 +9,6 @@ class DomainListItem extends React.Component {
   }
 
   handleChange = () => {
-    console.log('in handle change')
-
     this.setState({ isChanged: true })
     setTimeout(() => { this.setState({ isChanged: false }) }, 5000);
     this.props.handleChangePassword(this.props.domain);
@@ -37,7 +35,7 @@ class DomainListItem extends React.Component {
         </div>
         <div className="flex content-center align-center">
           {changeBtn}
-          <div className="delete-btn" onClick={this.handleDeleteDomain}>Delete</div>
+          <div className="delete-btn" onClick={this.handleDelete}>Delete</div>
         </div>
       </div>
     );
