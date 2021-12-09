@@ -127,7 +127,7 @@ li {
   font-size: 15px;
 }
 
-.change-btn, .delete-btn {
+.change-btn, .delete-btn, .changed {
   margin-top: 3px;
   padding: 2px 6px;
   border-radius: 7px;
@@ -139,6 +139,10 @@ li {
   /* border: 1px solid gray;
   color: gray; */
   background: gray;
+}
+.changed {
+  background: none;
+  color: green;
 }
 .delete-btn {
   /* border: 1px solid #dd5152;

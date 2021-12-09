@@ -1,15 +1,18 @@
 import React from "react";
 import DomainImage from './DomainImage'
-import { UNCHANGED, IN_PROGRESS, CHANGED } from '../utils/constants'
 var classNames = require('classnames');
 
 class DomainListItem extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = { isChanged: false }
   }
 
   handleChange = () => {
+    console.log('in handle change')
+
+    this.setState({ isChanged: true })
+    setTimeout(() => { this.setState({ isChanged: false }) }, 5000);
     this.props.handleChangePassword(this.props.domain);
   }
 
@@ -18,21 +21,14 @@ class DomainListItem extends React.Component {
   }
 
   render() {
-    const { domain, status } = this.props
+    const { domain } = this.props
+    const { isChanged } = this.state
+
     // Change pw button
-    let changeBtn = (<div className="change-btn mr2" onClick={this.handleChangePassword}>Change</div>)
-    if (status !== UNCHANGED) {
-      const changeClass = classNames('mr2', {
-        'changing': status === IN_PROGRESS,
-        'changed': status === CHANGED,
-      })
-      const changeText = classNames({
-        '...': status === IN_PROGRESS,
-        'Changed': status === CHANGED,
-      })
-      changeBtn = <div className={changeClass}>{changeText}</div>
-    }
-    // Item
+    const changeClass = classNames('change-btn mr2', { 'changed': isChanged })
+    const changeText = isChanged ? 'Changed!' : 'Change'
+    const changeBtn = <div className={changeClass} onClick={this.handleChange}>{changeText}</div>
+
     return (
       <div key={domain} className="domain-item flex justify-between align-center pb3">
         <div className="flex content-center align-center">

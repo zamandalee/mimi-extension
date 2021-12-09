@@ -8,20 +8,17 @@ import OptionsContent from "./components/OptionsContent"
 import FaqContent from "./components/FaqContent"
 import DomainListItem from "./components/DomainContentItem";
 import * as storage from "./utils/storage";
-import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
 
 var classNames = require('classnames');
 
 class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { mimiDomains: {}, activeTab: 'options' }
+		this.state = { mimiDomains: [], activeTab: 'vault' }
 	}
 
 	componentDidMount() {
-		const formattedDomains = {}
-		this.props.domains.forEach(domain => { formattedDomains[domain] = UNCHANGED })
-		this.setState({ mimiDomains: formattedDomains })
+		this.setState({ mimiDomains: this.props.domains })
 	}
 
 	handleTabClick = (activeTab) => {
@@ -29,23 +26,13 @@ class App extends React.Component {
 	}
 
 	handleChangePassword = (domain) => {
-		// Show that domain pw change is in progress
-		this.setState({
-			mimiDomains: Object.assign({ domain: IN_PROGRESS }, this.state.mimiDomains)
-		})
-		// Write a new counter to db1, db2
-		const newDomains = Object.assign({ domain: CHANGED }, this.state.mimiDomains)
-		this.props.changePassword(domain).then(() => {
-			// Market target domain as changed
-			this.setState({ mimiDomains: newDomains })
-		})
+		this.props.changePassword(domain)
 	}
 
 	deleteDomain = (uid, domain) => {
-		const newDomains = delete { ...this.state.mimiDomains }[domain]
-		this.props.deleteDomain(uid, domain).then(() => {
-			this.setState({ mimiDomains: newDomains })
-		})
+		const newDomains = this.state.mimiDomains.filter(el => el !== domain)
+		this.props.deleteDomain(uid, domain)
+		this.setState({ mimiDomains: newDomains })
 	}
 
 	handleConfigChange = (option, isChecked) => {
@@ -57,17 +44,17 @@ class App extends React.Component {
 		const uid = storage.getData("userId")
 
 		// Domain list
-		let domains = Object.keys(mimiDomains).map(domain => (
+		console.log(mimiDomains)
+		let domains = mimiDomains.map(domain => (
 			<DomainListItem
 				key={domain}
 				domain={domain}
-				status={mimiDomains[domain]}
 				handleChangePassword={this.handleChangePassword}
-				handleDeleteDomain={d => this.handleDeleteDomain(uid, d)} />
+				handleDeleteDomain={d => this.handleDeleteDomain(uid, domain)} />
 		));
 
 		// Empty domain list
-		if (Object.keys(mimiDomains).length === 0) {
+		if (mimiDomains.length === 0) {
 			domains = <div className="no-domains">No passwords saved with MiMi yet.</div>
 		}
 
