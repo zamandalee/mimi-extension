@@ -1,88 +1,88 @@
 import React from "react";
 // import "tailwindcss/tailwind.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import logo from "./full-logo.png"
-import FAQList from "./faqList"
-import DomainList from "./domainList"
-import DomainListItem from "./domainListItem";
+import "./assets/App.css";
+import logo from "./assets/full-logo.png";
+import DomainList from "./components/DomainContent";
+import OptionsContent from "./components/OptionsContent";
+import FaqContent from "./components/FaqContent";
+import DomainListItem from "./components/DomainContentItem";
 import * as storage from "./utils/storage";
-import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
+import {resetCounter} from "./utils/functions";
+import {deleteDomain, fetchAllDomains} from "./utils/firestore";
+import {getData} from "./utils/storage";
 
-var classNames = require('classnames');
+var classNames = require("classnames");
 
 class App extends React.Component {
 	constructor(props) {
-		super(props)
-		this.state = { mimiDomains: {}, activeTab: 'vault' }
+		super(props);
+		this.state = {mimiDomains: [], activeTab: "vault"};
 	}
 
-	componentDidMount() {
-		const formattedDomains = {}
-		this.props.domains.forEach(domain => { formattedDomains[domain] = UNCHANGED })
-		this.setState({ mimiDomains: formattedDomains })
+	async componentDidMount() {
+		const userId = await getData("userId");
+		const domains = await fetchAllDomains(userId);
+		this.setState({mimiDomains: domains, userId: userId});
 	}
 
-	handleTabClick = (activeTab) => {
-		console.log('asd;fklja;sdlfkj;asldkfja;lsdfj')
-		this.setState({ activeTab })
-	}
+	handleTabClick = activeTab => {
+		this.setState({activeTab});
+	};
 
-	handleChangePassword = (domain) => {
-		// Show that domain pw change is in progress
-		this.setState({
-			mimiDomains: Object.assign({ domain: IN_PROGRESS }, this.state.mimiDomains)
-		})
-		// Write a new counter to db1, db2
-		const newDomains = Object.assign({ domain: CHANGED }, this.state.mimiDomains)
-		this.props.changePassword(domain).then(() => {
-			// Market target domain as changed
-			this.setState({ mimiDomains: newDomains })
-		})
-	}
+	handleChangePassword = domain => {
+		resetCounter(domain);
+	};
 
-	deleteDomain = (uid, domain) => {
-		const newDomains = delete { ...this.state.mimiDomains }[domain]
-		this.props.deleteDomain(uid, domain).then(() => {
-			this.setState({ mimiDomains: newDomains })
-		})
-	}
+	handleDeleteDomain = domain => {
+		console.log(this.state.userId)
+		if (this.state.userId) {
+			const newDomains = this.state.mimiDomains.filter(el => el !== domain);
+			deleteDomain(this.state.userId, domain);
+			this.setState({mimiDomains: newDomains});
+		}
+	};
+
+	handleConfigChange = (option, isChecked) => {
+		storage.save(option, isChecked);
+	};
 
 	render() {
-		const { mimiDomains, activeTab } = this.state
-		const uid = storage.getData("userId")
+		const {mimiDomains, activeTab} = this.state;
 
 		// Domain list
-		let domains = Object.keys(mimiDomains).map(domain => (
-			<DomainListItem
-				key={domain}
-				domain={domain}
-				status={mimiDomains[domain]}
-				handleChangePassword={this.handleChangePassword}
-				handleDeleteDomain={d => this.handleDeleteDomain(uid, d)} />
+		let domains = mimiDomains.map(domain => (
+			<DomainListItem key={domain} domain={domain} handleChangePassword={this.handleChangePassword} handleDeleteDomain={this.handleDeleteDomain} />
 		));
 
 		// Empty domain list
-		if (Object.keys(mimiDomains).length === 0) {
-			domains = <div className="no-domains">No passwords saved with MiMi yet.</div>
+		if (mimiDomains.length === 0) {
+			domains = <div className='no-domains'>No passwords saved with MiMi yet.</div>;
 		}
 
-
 		// Active tab logic
-		const vaultClass = classNames('tab mr3', { 'active': activeTab === 'vault' })
-		const faqClass = classNames('tab', { 'active': activeTab === 'faq' })
-		const activeContent = activeTab === 'vault' ? (<div className="content">{domains}</div>) : <FAQList />
+		const vaultClass = classNames("tab mr3", {active: activeTab === "vault"});
+		const optionsClass = classNames("tab mr3", {active: activeTab === "options"});
+		const faqClass = classNames("tab", {active: activeTab === "faq"});
+
+		let activeContent = <div className='content'>{domains}</div>;
+		if (activeTab === "options") {
+			activeContent = <OptionsContent handleChange={this.handleConfigChange} />;
+		} else if (activeTab === "faq") {
+			activeContent = <FaqContent />;
+		}
 
 		return (
-			<div className="popup flex flex-column align-start">
-				<img className="logo" src={logo} />
-				<div className="flex justify-start content-center f4">
-					<div className={vaultClass}
-						onClick={this.handleTabClick.bind(this, 'vault')}>
+			<div className='popup flex flex-column align-start'>
+				<img className='logo' src={logo} />
+				<div className='flex justify-start content-center'>
+					<div className={vaultClass} onClick={this.handleTabClick.bind(this, "vault")}>
 						Vault
 					</div>
-					<div className={faqClass}
-						onClick={this.handleTabClick.bind(this, 'faq')}>
+					<div className={optionsClass} onClick={this.handleTabClick.bind(this, "options")}>
+						Options
+					</div>
+					<div className={faqClass} onClick={this.handleTabClick.bind(this, "faq")}>
 						FAQs
 					</div>
 				</div>
@@ -94,6 +94,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-
-

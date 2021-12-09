@@ -1,7 +1,5 @@
 /*global chrome*/
 // Content script, programmatically injected with keyboard shortcut
-import {parseDomain, ParseResultType, fromUrl} from "parse-domain";
-import { toUnicode, toASCII, encode } from "punycode";
 /**
  * To-Do:
  * Fix domain
@@ -10,16 +8,19 @@ import { toUnicode, toASCII, encode } from "punycode";
  * Make enter work
  */
 import {getCounter, generateMimi} from "./utils/functions";
+import * as psl from "psl"
+
 
 (async function doStuff() {
 	// 1. Get user's inputted plaintext password
 	let passField = document.querySelector(":focus");
+	if (passField === null) {
+		return
+	}
 	const masterPass = passField.value;
 
 	// 2. Get website domain name
-	const parseResult = parseDomain("www.some.example.co.uk");
-	console.log(parseResult, fromUrl(window.location.hostname))
-	const domain = parseResult.type === ParseResultType.Listed ? toUnicode(parseResult.domain) : window.location.hostname;
+	const domain = psl.get(window.location.hostname)
 	// 3. Get/create counter from local storage & decrypt with master password
 	// Counter = sum(each of 3 shares and masterpass turned into int)
 	const counter = await getCounter(domain);

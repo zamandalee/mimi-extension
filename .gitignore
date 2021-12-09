@@ -1,3 +1,4 @@
 node_modules/*
 build/*
 src/utils/mongo.js
+lambdas/functions/node_modules

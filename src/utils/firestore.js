@@ -1,4 +1,4 @@
-import {getFirestore, deleteField, doc, setDoc, getDoc, updateDoc, deleteDoc, FieldValue} from "firebase/firestore";
+import {getFirestore, deleteField, doc, setDoc, getDoc, updateDoc, deleteDoc, increment, FieldPath} from "firebase/firestore";
 import {initializeApp} from "@firebase/app";
 // Required for side-effects
 require("firebase/firestore");
@@ -48,29 +48,29 @@ async function setDomain(userId, domain, counter) {
 
 // Delete a domain
 async function deleteDomain(userId, domain) {
-    const docRef = doc(db, "users", userId)
-    await updateDoc(docRef, {
-        [domain]: deleteField()
-    });
+	console.log(userId, domain);
+	const docRef = doc(db, "users", userId);
+	await updateDoc(docRef, new FieldPath(domain), deleteField());
 }
 
 // Retrieve counters for a user domain.
 async function fetchCounter(userId, domain) {
 	const docRef = doc(db, "users", userId);
-    
 
 	const docSnap = await getDoc(docRef);
-    const countersTable = docSnap.data()
-    updateDoc(docRef, {numAccesses: countersTable.numAccesses + 1})
+	const countersTable = docSnap.data();
+	updateDoc(docRef, {numAccesses: increment(1)});
 
-    return domain in countersTable ? countersTable[domain] : undefined
+	return domain in countersTable ? countersTable[domain] : undefined;
 }
 
 async function fetchAllDomains(userId) {
-    const docRef = doc(db, "users", userId);
+	const docRef = doc(db, "users", userId);
 	const docSnap = await getDoc(docRef);
-    const countersTable = docSnap.data()
-    return Object.keys(countersTable)
+	const countersTable = docSnap.data();
+	return Object.keys(countersTable)
+		.filter(item => item !== "numAccesses")
+		.filter(item => item !== "accessPeriodStart");
 }
 
 export {createUser, deleteUser, setDomain, deleteDomain, fetchCounter, fetchAllDomains};

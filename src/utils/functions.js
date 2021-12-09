@@ -17,6 +17,11 @@ export const createAndStoreIdAndToken = async function() {
 export const generateMimi = async function (seed, domain, counter, passwordSpecs) {
     await sodium.ready
     const clientAuthToken = await storage.getData("clientAuth")
+
+    const needsCapitals = await storage.getData("capital letters")
+    const needsNumbers = await storage.getData("numbers")
+    const needsSymbols = await storage.getData("symbols")
+
     const concatSeed = seed + domain + counter + clientAuthToken
     let mimi = sodium.crypto_generichash(16, concatSeed);
     mimi = sodium.to_hex(mimi)
@@ -26,7 +31,7 @@ export const generateMimi = async function (seed, domain, counter, passwordSpecs
 // Get counter (1/3 of hashing inputs), possibly by combining multiple counter shares stored in separate DBs
 export const getCounter = async function (domain) {
     const uid = await storage.getData("userId")
-    // Counter doesn't exist for this domain. Generate a new one. 
+    // Counter doesn't exist for this domain. Generate a new one.
     const isNewCounter = await firestore.fetchCounter(uid, domain) === undefined
     if (isNewCounter) {
         await createOrEditCounter(uid, domain)
@@ -38,9 +43,9 @@ export const getCounter = async function (domain) {
 }
 
 // Modify existing counter, called when "Change Password" clicked
-export const resetCounter = function (domain) {
-    const uid = storage.getData("userId")
-    createOrEditCounter(uid, domain)
+export const resetCounter = async function (domain) {
+    const uid = await storage.getData("userId")
+    await createOrEditCounter(uid, domain)
 }
 
 export const generateQRString = async function () {
