@@ -61,10 +61,14 @@ input[type=number] {
   max-width: none !important;
 }
 
+
+body, #root, .popup, .content {
+  height: 100%;
+}
 body {
-  width: 400px;
-  height: 475px;
-  padding: 30px;
+  width: 350px;
+  height: 450px;
+  padding: 20px 30px 30px 30px;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
 }
@@ -75,34 +79,47 @@ li {
   padding: 5px 0;
 }
 
+.logo {
+  display: block;
+  max-height: 40px;
+  max-width: 40%;
+  margin-bottom: 18px;
+}
 /* popup tabs */
 .tab {
   transition: all 0.3s ease-in-out;
   color: darkgray;
 }
-.tab.active {
-  color: black;
-}
-/* .tab.active::after {
-  width: 100%;
-  border-bottom: 1px solid black;
-} */
 .tab::after {
   content: '';
   display: block;
   width: 0;
   height: 1px;
-  background: #dd5152;
+  background: darkgray;
   transition: width .3s;
 }
 .tab:hover::after {
   width: 100%;
-  border-bottom: 1px solid #dd5152;
+  border-bottom: 1px solid darkgray;
+}
+
+.tab.active {
+  color: black;
+}
+.tab.active::after {
+  width: 100%;
+  border-bottom: 1px solid black;
 }
 .tab:hover {
-  color: #dd5152;
+  /* color: black; */
   cursor: pointer;
   border-bottom: none;
+}
+
+/* content */
+.content {
+  margin-top: 15px;
+  overflow: scroll;
 }
 
 /* domain list item */
@@ -128,3 +145,13 @@ li {
   color: #dd5152; */
   background: #dd5152;
 }
+
+/* faqs */
+
+
+
+/* todos:
+- add mimi and logo to top
+- test button functionality
+- refactor domainList into separate component
+ */

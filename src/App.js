@@ -1,8 +1,10 @@
 import React from "react";
-import Collapsible from 'react-collapsible';
 // import "tailwindcss/tailwind.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import logo from "./full-logo.png"
+import FAQList from "./faqList"
+import DomainList from "./domainList"
 import DomainListItem from "./domainListItem";
 import * as storage from "./utils/storage";
 import { UNCHANGED, IN_PROGRESS, CHANGED } from './utils/constants'
@@ -53,6 +55,7 @@ class App extends React.Component {
 		// Domain list
 		let domains = Object.keys(mimiDomains).map(domain => (
 			<DomainListItem
+				key={domain}
 				domain={domain}
 				status={mimiDomains[domain]}
 				handleChangePassword={this.handleChangePassword}
@@ -64,28 +67,16 @@ class App extends React.Component {
 			domains = <div className="no-domains">No passwords saved with MiMi yet.</div>
 		}
 
-		// FAQs
-		const faqs = (
-			<div className="faqs">
-				<Collapsible trigger="How do I use MiMi?">
-					<ol>
-						<li>Click into a password input field</li>
-						<li>Fill in your MiMi master password</li>
-						<li>Hit command+shift+p to transform your master password</li>
-					</ol>
-				</Collapsible>
-				<Collapsible trigger="Is MiMi secure?"></Collapsible>
-			</div>
-		)
 
 		// Active tab logic
 		const vaultClass = classNames('tab mr3', { 'active': activeTab === 'vault' })
 		const faqClass = classNames('tab', { 'active': activeTab === 'faq' })
-		const activeContent = activeTab === 'vault' ? (<div className="domains">{domains}</div>) : faqs
+		const activeContent = activeTab === 'vault' ? (<div className="content">{domains}</div>) : <FAQList />
 
 		return (
-			<div className="popup">
-				<div className="flex justify-start content-center f4 pb3">
+			<div className="popup flex flex-column align-start">
+				<img className="logo" src={logo} />
+				<div className="flex justify-start content-center f4">
 					<div className={vaultClass}
 						onClick={this.handleTabClick.bind(this, 'vault')}>
 						Vault
