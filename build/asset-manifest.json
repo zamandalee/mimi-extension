@@ -7,6 +7,7 @@
     "content-script.js": "/content-script.js",
     "content-script.js.map": "/content-script.js.map",
     "index.html": "/index.html",
+    "static/media/full-logo.png": "/static/media/full-logo.724ef78f.png",
     "static/media/missingImage.jpg": "/static/media/missingImage.138967fc.jpg"
   }
 }

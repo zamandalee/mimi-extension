@@ -53,7 +53,7 @@ async function deleteDomain(userId, domain) {
     });
 }
 
-// Retrieve counters for a user domain. 
+// Retrieve counters for a user domain.
 async function fetchCounter(userId, domain) {
 	const docRef = doc(db, "users", userId);
 	const docSnap = await getDoc(docRef);

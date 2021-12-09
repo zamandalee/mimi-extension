@@ -4,7 +4,10 @@ import App from './App';
 import { resetCounter } from "./utils/functions";
 import { deleteDomain } from "./utils/firestore";
 
-const domains = [] // TODO: fetch domains from backend!!
+const domains = [
+  'instacart.com', 'airbnb.com', 'robinhood.com', 'nytimes.com', 'canva.com', 'lyft.com',
+  'twitter.com', 'brown.edu', 'workday.com', 'apple.com'
+] // TODO: fetch domains from backend!!
 
 ReactDOM.render(
   <App

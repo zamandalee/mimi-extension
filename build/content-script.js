@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "0076836c5b92e11a8e3b";
+/******/ 	var hotCurrentHash = "4a80bc668d435812ddd0";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -103331,7 +103331,7 @@ async function deleteDomain(userId, domain) {
   await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["updateDoc"])(docRef, {
     [domain]: Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["deleteField"])()
   });
-} // Retrieve counters for a user domain. 
+} // Retrieve counters for a user domain.
 
 
 async function fetchCounter(userId, domain) {
