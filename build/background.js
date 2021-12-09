@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "4a80bc668d435812ddd0";
+/******/ 	var hotCurrentHash = "195be710cdca42049c37";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -102684,7 +102684,7 @@ async function fetchAllDomains(userId) {
 /*!********************************!*\
   !*** ./src/utils/functions.js ***!
   \********************************/
-/*! exports provided: createAndStoreIdAndToken, generateMimi, getCounter, resetCounter */
+/*! exports provided: createAndStoreIdAndToken, generateMimi, getCounter, resetCounter, generateQRString */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -102693,6 +102693,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateMimi", function() { return generateMimi; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCounter", function() { return getCounter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetCounter", function() { return resetCounter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateQRString", function() { return generateQRString; });
 /* harmony import */ var _storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./storage */ "./src/utils/storage.js");
 /* harmony import */ var _firestore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./firestore */ "./src/utils/firestore.js");
 /*global chrome*/
@@ -102736,6 +102737,11 @@ const getCounter = async function (domain) {
 const resetCounter = function (domain) {
   const uid = _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("userId");
   createOrEditCounter(uid, domain);
+};
+const generateQRString = async function () {
+  const userId = await _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("userId");
+  const clientAuth = await _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("clientAuth");
+  return userId + " " + clientAuth;
 }; // ------------------ PRIVATE HELPERS: ------------------
 // Password from string to int
 

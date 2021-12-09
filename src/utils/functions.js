@@ -45,6 +45,11 @@ export const resetCounter = function (domain) {
     createOrEditCounter(uid, domain)
 }
 
+export const generateQRString = async function () {
+    const userId = await storage.getData("userId")
+    const clientAuth = await storage.getData("clientAuth")
+    return userId + " " + clientAuth
+}
 // ------------------ PRIVATE HELPERS: ------------------
 
 // Password from string to int
