@@ -4,7 +4,6 @@ import * as storage from "./storage";
 import * as firestore from "./firestore";
 const sodium = require('libsodium-wrappers');
 
- // TODO: not using anywhere?
 // User auth, access to counters
 export const createAndStoreIdAndToken = async function() {
     await sodium.ready
@@ -14,11 +13,10 @@ export const createAndStoreIdAndToken = async function() {
     storage.save("clientAuth", authToken)
 }
 
-// Hash the masterpass, domain name, and counter together to product the MiMi password
-export const generateMimi = async function (seed, domain, counter) {
+// Hash the masterpass, domain name, clientAuthToken, and counter together to product the MiMi password
+export const generateMimi = async function (seed, domain, counter, passwordSpecs) {
     await sodium.ready
     const clientAuthToken = await storage.getData("clientAuth")
-
     const concatSeed = seed + domain + counter + clientAuthToken
     let mimi = sodium.crypto_generichash(16, concatSeed);
     mimi = sodium.to_hex(mimi)

@@ -1,7 +1,7 @@
 /*global chrome*/
 // Content script, programmatically injected with keyboard shortcut
-import {parseDomain, ParseResultType} from "parse-domain";
-
+import {parseDomain, ParseResultType, fromUrl} from "parse-domain";
+import { toUnicode, toASCII, encode } from "punycode";
 /**
  * To-Do:
  * Fix domain
@@ -17,8 +17,9 @@ import {getCounter, generateMimi} from "./utils/functions";
 	const masterPass = passField.value;
 
 	// 2. Get website domain name
-	const parseResult = parseDomain(window.location.hostname);
-	const domain = parseResult.type === ParseResultType.Listed ? parseResult.domain : window.location.hostname;
+	const parseResult = parseDomain("www.some.example.co.uk");
+	console.log(parseResult, fromUrl(window.location.hostname))
+	const domain = parseResult.type === ParseResultType.Listed ? toUnicode(parseResult.domain) : window.location.hostname;
 	// 3. Get/create counter from local storage & decrypt with master password
 	// Counter = sum(each of 3 shares and masterpass turned into int)
 	const counter = await getCounter(domain);

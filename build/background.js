@@ -185,7 +185,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "195be710cdca42049c37";
+/******/ 	var hotCurrentHash = "06e6c985e73c474ca317";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -102604,7 +102604,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
- // Firebase configuration
+ // Required for side-effects
+
+__webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js"); // Firebase configuration
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBrdxO2cgm9IHJw8bRIn-8SfK_jIK4KRSY",
@@ -102620,7 +102623,9 @@ const db = Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["getFirestore"
 
 async function createUser(userId) {
   try {
-    await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["setDoc"])(Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId), {}, {
+    await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["setDoc"])(Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId), {
+      numAccesses: 0
+    }, {
       merge: true
     });
     console.log("Creating a profile for user ".concat(userId));
@@ -102666,6 +102671,9 @@ async function fetchCounter(userId, domain) {
   const docRef = Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["doc"])(db, "users", userId);
   const docSnap = await Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["getDoc"])(docRef);
   const countersTable = docSnap.data();
+  Object(firebase_firestore__WEBPACK_IMPORTED_MODULE_0__["updateDoc"])(docRef, {
+    numAccesses: countersTable.numAccesses + 1
+  });
   return domain in countersTable ? countersTable[domain] : undefined;
 }
 
@@ -102700,8 +102708,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js"); // TODO: not using anywhere?
-// User auth, access to counters
+const sodium = __webpack_require__(/*! libsodium-wrappers */ "./node_modules/libsodium-wrappers/dist/modules/libsodium-wrappers.js"); // User auth, access to counters
 
 
 const createAndStoreIdAndToken = async function () {
@@ -102710,9 +102717,9 @@ const createAndStoreIdAndToken = async function () {
   const authToken = sodium.to_hex(sodium.randombytes_buf(32));
   _storage__WEBPACK_IMPORTED_MODULE_0__["save"]("userId", uidToken);
   _storage__WEBPACK_IMPORTED_MODULE_0__["save"]("clientAuth", authToken);
-}; // Hash the masterpass, domain name, and counter together to product the MiMi password
+}; // Hash the masterpass, domain name, clientAuthToken, and counter together to product the MiMi password
 
-const generateMimi = async function (seed, domain, counter) {
+const generateMimi = async function (seed, domain, counter, passwordSpecs) {
   await sodium.ready;
   const clientAuthToken = await _storage__WEBPACK_IMPORTED_MODULE_0__["getData"]("clientAuth");
   const concatSeed = seed + domain + counter + clientAuthToken;

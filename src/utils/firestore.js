@@ -1,6 +1,7 @@
-import {getFirestore, deleteField, doc, setDoc, getDoc, updateDoc, deleteDoc} from "firebase/firestore";
+import {getFirestore, deleteField, doc, setDoc, getDoc, updateDoc, deleteDoc, FieldValue} from "firebase/firestore";
 import {initializeApp} from "@firebase/app";
-
+// Required for side-effects
+require("firebase/firestore");
 // Firebase configuration
 const firebaseConfig = {
 	apiKey: "AIzaSyBrdxO2cgm9IHJw8bRIn-8SfK_jIK4KRSY",
@@ -18,7 +19,7 @@ const db = getFirestore();
 // Add user when they first use MiMi
 async function createUser(userId) {
 	try {
-		await setDoc(doc(db, "users", userId), {}, {merge: true});
+		await setDoc(doc(db, "users", userId), {numAccesses: 0}, {merge: true});
 		console.log(`Creating a profile for user ${userId}`);
 	} catch (e) {
 		console.error("Error creating document: ", e);
@@ -56,8 +57,12 @@ async function deleteDomain(userId, domain) {
 // Retrieve counters for a user domain.
 async function fetchCounter(userId, domain) {
 	const docRef = doc(db, "users", userId);
+    
+
 	const docSnap = await getDoc(docRef);
     const countersTable = docSnap.data()
+    updateDoc(docRef, {numAccesses: countersTable.numAccesses + 1})
+
     return domain in countersTable ? countersTable[domain] : undefined
 }
 
