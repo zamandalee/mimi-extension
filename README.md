@@ -1,6 +1,6 @@
 # MiMi: A Server-Optional Password Manager
 
-![Mimi UI](assets/ui.jpg)
+![Mimi UI](assets/mimi.png)
 ## Authors
 - Mason Zhang
 - Amanda Lee
